@@ -40,6 +40,7 @@ android {
 }
 
 dependencies {
+    implementation ("androidx.navigation:navigation-compose:2.4.0-alpha10")
     implementation("com.composables:icons-lucide:1.0.0")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
