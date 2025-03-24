@@ -27,14 +27,3 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
-@ExperimentalMaterial3Api
-@Preview
-@Composable
-fun PreviewLoginCard() {
-    MyappTheme {
-        Surface {
-            HomeSeller()
-        }
-    }
-}

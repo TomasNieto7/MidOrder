@@ -1,38 +1,65 @@
 package com.desarrollo.myapp.ui.components
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.outlined.FavoriteBorder
-import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Star
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
+import com.composables.icons.lucide.Bookmark
+import com.composables.icons.lucide.Lucide
+import com.composables.icons.lucide.MapPin
+import com.composables.icons.lucide.Package
+
+data class BottomNavItem(val label: String, val route: String, val icon: ImageVector)
 
 @Composable
-fun NavBar(modifier: Modifier = Modifier) {
-    var selectedItem by remember { mutableIntStateOf(0) }
-    val items = listOf("Songs", "Artists", "Playlists")
-    val selectedIcons = listOf(Icons.Filled.Home, Icons.Filled.Favorite, Icons.Filled.Star)
-    val unselectedIcons = listOf(Icons.Outlined.Home, Icons.Outlined.FavoriteBorder, Icons.Outlined.Star)
+fun NavBar(navController: NavController, modifier: Modifier = Modifier) {
+    val currentBackStackEntry = navController.currentBackStackEntryAsState()
+    val currentRoute = currentBackStackEntry.value?.destination?.route
+    val items = listOf(
+        BottomNavItem("Explorar", "homeSeller", Lucide.MapPin),
+        BottomNavItem("Favoritos", "locationSeller", Lucide.Bookmark),
+        BottomNavItem("Envios", "ordersSeller", Lucide.Package)
+    )
 
     NavigationBar(modifier = modifier) {
-        items.forEachIndexed { index, item ->
+        items.forEach { item ->
+            val isSelected = currentRoute == item.route
+
             NavigationBarItem(
-                icon = { Icon(if (selectedItem == index) selectedIcons[index] else unselectedIcons[index], contentDescription = item) },
-                label = { Text(item) },
-                selected = selectedItem == index,
-                onClick = { selectedItem = index }
+                icon = {
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier
+                            .size(40.dp)
+                    ) {
+                        Icon(
+                            imageVector = item.icon,
+                            contentDescription = item.label,
+                            tint = Color.Unspecified
+                        )
+                    }
+                },
+                label = { Text(item.label) },
+                selected = isSelected,
+                onClick = {
+                    navController.navigate(item.route) {
+                        popUpTo("homeSeller") { inclusive = false }
+                        launchSingleTop = true
+                    }
+                }
             )
         }
     }
 }
+
+

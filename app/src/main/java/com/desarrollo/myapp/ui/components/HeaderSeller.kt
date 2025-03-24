@@ -21,9 +21,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
+import com.composables.icons.lucide.ArrowLeft
 import com.composables.icons.lucide.Bell
 import com.composables.icons.lucide.CircleUser
 import com.composables.icons.lucide.Lucide
+import com.composables.icons.lucide.User
 import com.desarrollo.myapp.ui.pages.HomeSeller
 import com.desarrollo.myapp.ui.theme.MyappTheme
 
@@ -76,3 +79,30 @@ fun HeaderSeller(modifier: Modifier = Modifier, content: @Composable (PaddingVal
         }
     }
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun OrderTopBarBack(navController: NavController) {
+    TopAppBar(
+        title = { Text("MidOrder") },
+        navigationIcon = {
+            // Flecha de regreso
+            IconButton(onClick = { navController.popBackStack() }) {
+                Icon(
+                    imageVector = Lucide.ArrowLeft, // Flecha hacia atrás
+                    contentDescription = "Regresar"
+                )
+            }
+        },
+        actions = {
+            IconButton(onClick = { /* Acción de notificación */ }) {
+                Icon(Lucide.Bell, contentDescription = "Notificaciones")
+            }
+            IconButton(onClick = { /* Acción de usuario */ }) {
+                Icon(Lucide.User, contentDescription = "Perfil")
+            }
+        }
+    )
+}
+
+
