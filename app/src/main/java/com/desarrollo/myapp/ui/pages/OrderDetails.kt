@@ -45,6 +45,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.desarrollo.myapp.ui.components.NavBar
+import com.desarrollo.myapp.ui.components.OrderTopBarBack
 
 @Composable
 fun OrderDetails(orderId: Int, navController: NavController) {
@@ -57,7 +58,7 @@ fun OrderDetails(orderId: Int, navController: NavController) {
     val order = orders.firstOrNull { it.id == orderId } ?: return
 
     Scaffold (
-        topBar = { MidOrderTopBar() }, // Reutilizamos el mismo TopBar
+        topBar = { OrderTopBarBack(navController = navController) }, // Reutilizamos el mismo TopBar
         bottomBar = { NavBar(navController) } // Reutilizamos el mismo NavBar
     ) { padding ->
         Column(

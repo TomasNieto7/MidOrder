@@ -41,7 +41,6 @@ import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.PackageX
 import com.composables.icons.lucide.Timer
 import com.desarrollo.myapp.ui.components.NavBar
-import com.desarrollo.myapp.ui.components.OrderTopBarBack
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -55,7 +54,7 @@ fun OrdersSeller(navController: NavController) {
     )
 
     Scaffold(
-        topBar = { OrderTopBarBack(navController = navController) },
+        topBar = { MidOrderTopBar() },
         bottomBar = { NavBar(navController) }
     ) { padding ->
         Column(
