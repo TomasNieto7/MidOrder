@@ -114,15 +114,15 @@ fun CardsLocation() {
         modifier = Modifier.fillMaxSize()
     ) {
         item {
-            CardLocation()
+            CardLocation(isAdded = true)
             Spacer(modifier = Modifier.height(16.dp))
         }
         item {
-            CardLocation()
+            CardLocation(isAdded = true)
             Spacer(modifier = Modifier.height(16.dp))
         }
         item {
-            CardLocation()
+            CardLocation(isAdded = true)
             Spacer(modifier = Modifier.height(16.dp))
         }
     }

@@ -80,6 +80,13 @@ fun OrdersSeller(navController: NavController) {
                     }
                 }
             }
+            Button(
+                onClick = { /* Acción para mostrar QR */ },
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD9BAF5)),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Imprimir etiquetas")
+            }
         }
     }
 }

@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -21,11 +22,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.desarrollo.myapp.R
+import com.desarrollo.myapp.ui.pages.CardsLocation
 
 @Composable
-fun CardLocation() {
+fun CardLocation(isAdded: Boolean) {
     Card(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant,
@@ -51,6 +54,7 @@ fun CardLocation() {
             Column(
                 modifier = Modifier
                     .padding(16.dp)
+                    .fillMaxWidth()
             ) {
                 Text(
                     text = "Puesto 1",
@@ -70,12 +74,21 @@ fun CardLocation() {
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(
-                    onClick = { /* Acción de agregar */ },
-                    modifier = Modifier.align(Alignment.End)
+                    onClick = { /* Acción de agregar o eliminar */ },
+                    modifier = Modifier.align(Alignment.End),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = if (isAdded) MaterialTheme.colorScheme.primary else Color(0xFF974545)
+                    )
                 ) {
-                    Text("Agregar")
+                    Text(if (isAdded) "Agregar" else "Eliminar")
                 }
             }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewCardLocation() {
+    CardLocation(isAdded = true) // Aquí puedes cambiar a false para ver el otro estado
 }

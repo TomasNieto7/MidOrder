@@ -2,8 +2,10 @@ package com.desarrollo.myapp.ui.pages
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -21,6 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.desarrollo.myapp.ui.components.CardLocation
 import com.desarrollo.myapp.ui.components.NavBar
 import com.desarrollo.myapp.ui.components.OrderBottomSheet
 import com.desarrollo.myapp.ui.components.SearchBar
@@ -39,7 +42,9 @@ fun LocationsSeller(navController: NavController) {
             .padding(padding)
             .padding(horizontal = 16.dp)
         ) {
-            Text("Mis Ubicaciones")
+            SearchBar()
+            Spacer(modifier = Modifier.height(16.dp))
+            CardsMyLocations()
         }
     }
 
@@ -52,6 +57,26 @@ fun LocationsSeller(navController: NavController) {
                 onDismiss = { showBottomSheet = false },
                 onContinue = { /* Lógica al continuar */ }
             )
+        }
+    }
+}
+
+@Composable
+fun CardsMyLocations() {
+    LazyColumn(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        item {
+            CardLocation(isAdded = false)
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+        item {
+            CardLocation(isAdded = false)
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+        item {
+            CardLocation(isAdded = false)
+            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }

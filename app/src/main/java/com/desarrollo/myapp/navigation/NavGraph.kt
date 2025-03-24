@@ -10,6 +10,7 @@ import com.desarrollo.myapp.ui.pages.LocationsSeller
 import com.desarrollo.myapp.ui.pages.LoginPage
 import com.desarrollo.myapp.ui.pages.OrderDetails
 import com.desarrollo.myapp.ui.pages.OrdersSeller
+import com.desarrollo.myapp.ui.pages.QRSeller
 
 @ExperimentalMaterial3Api
 @Composable
@@ -25,5 +26,12 @@ fun NavGraph(navController: NavHostController) {
             val orderId = backStackEntry.arguments?.getString("orderId")?.toInt() ?: return@composable
             OrderDetails(orderId = orderId, navController = navController)
         }
+
+        // Ruta para la subpágina dentro de "orderDetail" (por ejemplo, ver QR)
+        composable("orderDetail/{orderId}/qr") { backStackEntry ->
+            val orderId = backStackEntry.arguments?.getString("orderId")?.toInt() ?: return@composable
+            QRSeller(orderId = orderId, navController = navController)
+        }
     }
 }
+
