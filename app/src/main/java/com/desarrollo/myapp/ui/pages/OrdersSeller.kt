@@ -40,6 +40,7 @@ import com.composables.icons.lucide.Boxes
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.PackageX
 import com.composables.icons.lucide.Timer
+import com.desarrollo.myapp.ui.components.MidOrderTopBar
 import com.desarrollo.myapp.ui.components.NavBar
 
 

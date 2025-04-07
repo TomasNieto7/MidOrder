@@ -27,6 +27,7 @@ import com.desarrollo.myapp.ui.components.CardLocation
 import com.desarrollo.myapp.ui.components.NavBar
 import com.desarrollo.myapp.ui.components.OrderBottomSheet
 import com.desarrollo.myapp.ui.components.SearchBar
+import com.desarrollo.myapp.ui.components.MidOrderTopBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

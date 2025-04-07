@@ -31,7 +31,7 @@ import com.desarrollo.myapp.ui.components.SearchBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeSeller(navController: NavController) {
+fun HomeTenant(navController: NavController) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var showBottomSheet by remember { mutableStateOf(false) }
 
@@ -53,7 +53,7 @@ fun HomeSeller(navController: NavController) {
         ) {
             SearchBar()
             Spacer(modifier = Modifier.height(16.dp))
-            CardsLocation()
+            CardsLocation2()
         }
     }
 
@@ -72,7 +72,7 @@ fun HomeSeller(navController: NavController) {
 
 
 @Composable
-fun CardsLocation() {
+fun CardsLocation2() {
     LazyColumn(
         modifier = Modifier.fillMaxSize()
     ) {

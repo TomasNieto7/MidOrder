@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "628823735030",
+    "project_id": "midorder-a4cb9",
+    "storage_bucket": "midorder-a4cb9.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:628823735030:android:5612ffcef673eb61858ad7",
+        "android_client_info": {
+          "package_name": "com.desarrollo.myapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAgTq00-9BVwA20_TUunzRiguTNUb7-lQ8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
