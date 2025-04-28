@@ -53,7 +53,6 @@ fun HomeTenant(navController: NavController) {
         ) {
             SearchBar()
             Spacer(modifier = Modifier.height(16.dp))
-            CardsLocation2()
         }
     }
 
@@ -71,22 +70,4 @@ fun HomeTenant(navController: NavController) {
 }
 
 
-@Composable
-fun CardsLocation2() {
-    LazyColumn(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        item {
-            CardLocation(isAdded = true)
-            Spacer(modifier = Modifier.height(16.dp))
-        }
-        item {
-            CardLocation(isAdded = true)
-            Spacer(modifier = Modifier.height(16.dp))
-        }
-        item {
-            CardLocation(isAdded = true)
-            Spacer(modifier = Modifier.height(16.dp))
-        }
-    }
-}
+

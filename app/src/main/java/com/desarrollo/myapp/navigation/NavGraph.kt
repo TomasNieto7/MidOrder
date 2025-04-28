@@ -11,13 +11,19 @@ import com.desarrollo.myapp.ui.pages.LoginPage
 import com.desarrollo.myapp.ui.pages.OrderDetails
 import com.desarrollo.myapp.ui.pages.OrdersSeller
 import com.desarrollo.myapp.ui.pages.QRSeller
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.desarrollo.myapp.viewmodel.HomeViewModel
+
 
 @ExperimentalMaterial3Api
 @Composable
 fun NavGraph(navController: NavHostController) {
     NavHost(navController, startDestination = "login") {
         composable("login") { LoginPage(navController) }
-        composable("homeSeller") { HomeSeller(navController) }
+        composable("homeSeller") {
+            val homeViewModel: HomeViewModel = viewModel()
+            HomeSeller(navController = navController, viewModel = homeViewModel)
+        }
         composable("ordersSeller") { OrdersSeller(navController) }
         composable("locationSeller") { LocationsSeller(navController) }
 

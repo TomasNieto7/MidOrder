@@ -27,11 +27,18 @@ import com.desarrollo.myapp.ui.components.MidOrderTopBar
 import com.desarrollo.myapp.ui.components.NavBar
 import com.desarrollo.myapp.ui.components.OrderBottomSheet
 import com.desarrollo.myapp.ui.components.SearchBar
+import com.desarrollo.myapp.viewmodel.HomeViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.runtime.collectAsState
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeSeller(navController: NavController) {
+fun HomeSeller(
+    navController: NavController,
+    viewModel: HomeViewModel = viewModel()
+) {
+    val locals by viewModel.locals.collectAsState()
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var showBottomSheet by remember { mutableStateOf(false) }
 
@@ -53,7 +60,8 @@ fun HomeSeller(navController: NavController) {
         ) {
             SearchBar()
             Spacer(modifier = Modifier.height(16.dp))
-            CardsLocation()
+            CardsLocation(locals)
+
         }
     }
 
@@ -70,23 +78,25 @@ fun HomeSeller(navController: NavController) {
     }
 }
 
-
 @Composable
-fun CardsLocation() {
+fun CardsLocation(locals: List<Map<String, Any>>) {
     LazyColumn(
         modifier = Modifier.fillMaxSize()
     ) {
-        item {
-            CardLocation(isAdded = true)
-            Spacer(modifier = Modifier.height(16.dp))
-        }
-        item {
-            CardLocation(isAdded = true)
-            Spacer(modifier = Modifier.height(16.dp))
-        }
-        item {
-            CardLocation(isAdded = true)
+        items(locals.size) { index ->
+            val local = locals[index]
+            val images = (local["picture"] as? List<*>)?.mapNotNull { it?.toString() } ?: emptyList()
+
+            CardLocation(
+                localName = local["localName"].toString(),
+                category = local["category"].toString(),
+                address = local["address"].toString(),
+                urlImages = images,
+                isAdded = true
+            )
+
             Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }
+

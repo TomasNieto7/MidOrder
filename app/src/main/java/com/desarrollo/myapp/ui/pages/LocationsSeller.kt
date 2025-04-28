@@ -45,7 +45,6 @@ fun LocationsSeller(navController: NavController) {
         ) {
             SearchBar()
             Spacer(modifier = Modifier.height(16.dp))
-            CardsMyLocations()
         }
     }
 
@@ -62,22 +61,3 @@ fun LocationsSeller(navController: NavController) {
     }
 }
 
-@Composable
-fun CardsMyLocations() {
-    LazyColumn(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        item {
-            CardLocation(isAdded = false)
-            Spacer(modifier = Modifier.height(16.dp))
-        }
-        item {
-            CardLocation(isAdded = false)
-            Spacer(modifier = Modifier.height(16.dp))
-        }
-        item {
-            CardLocation(isAdded = false)
-            Spacer(modifier = Modifier.height(16.dp))
-        }
-    }
-}

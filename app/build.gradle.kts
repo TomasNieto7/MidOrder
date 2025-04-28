@@ -41,6 +41,10 @@ android {
 }
 
 dependencies {
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.4")
+    implementation("com.google.accompanist:accompanist-pager:0.34.0")
+    implementation("com.google.accompanist:accompanist-pager-indicators:0.34.0")
+    implementation("io.coil-kt:coil-compose:2.4.0")
     implementation(platform("com.google.firebase:firebase-bom:33.12.0"))
     implementation ("androidx.navigation:navigation-compose:2.4.0-alpha10")
     implementation("com.composables:icons-lucide:1.0.0")

@@ -6,6 +6,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -16,14 +17,13 @@ import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun InputLogin(label: String, placeholder: String) {
-    var text by remember { mutableStateOf("") }
-
+fun InputLogin(label: String, placeholder: String, state: MutableState<String>) {
     OutlinedTextField(
-        value = text,
-        onValueChange = { text = it },
+        value = state.value,
+        onValueChange = { state.value = it },
         label = { Text(label) },
         placeholder = { Text(placeholder) },
+        singleLine = true,
         //isError = text.isEmpty(), // Ejemplo de estado de error
         modifier = Modifier.padding(10.dp),
         colors = TextFieldDefaults.outlinedTextFieldColors(
