@@ -1,12 +1,13 @@
 package com.desarrollo.myapp.repository
 
+import com.desarrollo.myapp.model.UserSession
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 
 class LoginRepository {
     private val db = FirebaseFirestore.getInstance()
 
-    suspend fun login(email: String, password: String): String? {
+    suspend fun login(email: String, password: String): UserSession? {
         return try {
             val querySnapshot = db.collection("users")
                 .whereEqualTo("email", email)
@@ -16,13 +17,19 @@ class LoginRepository {
 
             if (!querySnapshot.isEmpty) {
                 val document = querySnapshot.documents[0]
-                document.getString("role")  // Devuelve el role ("seller" o "tenant")
+                val role = document.getString("role")
+                val userId = document.id
+
+                if (role != null) {
+                    UserSession(userId, role)
+                } else {
+                    null
+                }
             } else {
-                null  // No encontró usuario
+                null
             }
         } catch (e: Exception) {
             null
         }
     }
 }
-

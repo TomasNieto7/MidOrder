@@ -1,5 +1,7 @@
 package com.desarrollo.myapp.ui.pages
 
+import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -30,6 +32,8 @@ import com.desarrollo.myapp.ui.components.SearchBar
 import com.desarrollo.myapp.viewmodel.HomeViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.platform.LocalContext
+import com.desarrollo.myapp.ui.components.Logo
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -41,6 +45,11 @@ fun HomeSeller(
     val locals by viewModel.locals.collectAsState()
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var showBottomSheet by remember { mutableStateOf(false) }
+
+    val context = LocalContext.current
+    val userId = getUserId(context)
+
+    Log.d("user", "ref: ${userId ?: "No hay usuario guardado"}")
 
     Scaffold(
         topBar = { MidOrderTopBar() },
@@ -99,4 +108,10 @@ fun CardsLocation(locals: List<Map<String, Any>>) {
         }
     }
 }
+
+fun getUserId(context: Context): String? {
+    val sharedPref = context.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
+    return sharedPref.getString("userId", null)
+}
+
 

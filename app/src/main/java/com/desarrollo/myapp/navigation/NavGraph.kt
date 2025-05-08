@@ -12,6 +12,9 @@ import com.desarrollo.myapp.ui.pages.OrderDetails
 import com.desarrollo.myapp.ui.pages.OrdersSeller
 import com.desarrollo.myapp.ui.pages.QRSeller
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.desarrollo.myapp.ui.pages.HomeTenant
+import com.desarrollo.myapp.ui.pages.MyLocalsTenant
+import com.desarrollo.myapp.ui.pages.RegisterLocal
 import com.desarrollo.myapp.viewmodel.HomeViewModel
 
 
@@ -37,6 +40,16 @@ fun NavGraph(navController: NavHostController) {
         composable("orderDetail/{orderId}/qr") { backStackEntry ->
             val orderId = backStackEntry.arguments?.getString("orderId")?.toInt() ?: return@composable
             QRSeller(orderId = orderId, navController = navController)
+        }
+        composable("homeTenant") {
+            HomeTenant(navController = navController)
+        }
+        composable("myLocalsTenant") {
+            MyLocalsTenant(navController = navController)
+        }
+
+        composable("registerLocal") {
+            RegisterLocal(navController = navController)
         }
     }
 }

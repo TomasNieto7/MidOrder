@@ -1,5 +1,6 @@
 package com.desarrollo.myapp.ui.pages
 
+import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Box
@@ -45,26 +46,39 @@ fun LoginPage(navController: NavController) {
             Inputs(emailState, passwordState)
             Button(onClick = {
                 scope.launch {
-                    val role = loginRepository.login(emailState.value, passwordState.value)
-                    when (role?.lowercase()) {
-                        "seller" -> navController.navigate("homeSeller")
-                        "tenant" -> navController.navigate("homeTenant")
-                        else -> Toast.makeText(context, "Rol desconocido o credenciales inválidas", Toast.LENGTH_SHORT).show()
+                    val userSession = loginRepository.login(emailState.value, passwordState.value)
+                    if (userSession != null) {
+                        saveUserId(context, userSession.userId)
+                        when (userSession.role.lowercase()) {
+                            "seller" -> navController.navigate("homeSeller")
+                            "tenant" -> navController.navigate("homeTenant")
+                            else -> Toast.makeText(context, "Rol desconocido", Toast.LENGTH_SHORT).show()
+                        }
+                    } else {
+                        Toast.makeText(context, "Correo o contraseña incorrectos", Toast.LENGTH_SHORT).show()
                     }
                 }
             }) {
                 Text(text = "Iniciar sesión")
             }
 
+
         }
     }
 }
-
 
 @Composable
 fun Inputs(emailState: MutableState<String>, passwordState: MutableState<String>) {
     Column {
         InputLogin("Correo", "ejemplo@mail.com", emailState)
         InputLogin("Contraseña", "********", passwordState)
+    }
+}
+
+fun saveUserId(context: Context, userId: String) {
+    val sharedPref = context.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
+    with (sharedPref.edit()) {
+        putString("userId", userId)
+        apply()
     }
 }

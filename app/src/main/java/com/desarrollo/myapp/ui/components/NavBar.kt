@@ -62,4 +62,44 @@ fun NavBar(navController: NavController, modifier: Modifier = Modifier) {
     }
 }
 
+@Composable
+fun NavBarTenant(navController: NavController, modifier: Modifier = Modifier) {
+    val currentBackStackEntry = navController.currentBackStackEntryAsState()
+    val currentRoute = currentBackStackEntry.value?.destination?.route
+    val items = listOf(
+        BottomNavItem("Recolectas", "homeTenant", Lucide.MapPin),
+        BottomNavItem("Mis Locales", "myLocalsTenant", Lucide.Bookmark),
+    )
+
+    NavigationBar(modifier = modifier) {
+        items.forEach { item ->
+            val isSelected = currentRoute == item.route
+
+            NavigationBarItem(
+                icon = {
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier
+                            .size(40.dp)
+                    ) {
+                        Icon(
+                            imageVector = item.icon,
+                            contentDescription = item.label,
+                            tint = Color.Unspecified
+                        )
+                    }
+                },
+                label = { Text(item.label) },
+                selected = isSelected,
+                onClick = {
+                    navController.navigate(item.route) {
+                        popUpTo("homeTenant") { inclusive = false }
+                        launchSingleTop = true
+                    }
+                }
+            )
+        }
+    }
+}
+
 
