@@ -2,6 +2,7 @@ package com.desarrollo.myapp.ui.components
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
@@ -27,11 +28,11 @@ fun InputLogin(label: String, placeholder: String, state: MutableState<String>) 
         //isError = text.isEmpty(), // Ejemplo de estado de error
         modifier = Modifier.padding(10.dp),
         colors = TextFieldDefaults.outlinedTextFieldColors(
-            focusedBorderColor = Color(0xFF578FB5),
-            unfocusedBorderColor = Color(0xFF578FB5),
-            cursorColor = Color.Black,
-            focusedLabelColor = Color(0xFF00528A),
-            unfocusedLabelColor = Color.Black,
+            focusedBorderColor = MaterialTheme.colorScheme.primary,
+            unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+            cursorColor = MaterialTheme.colorScheme.onSurface,
+            focusedLabelColor = MaterialTheme.colorScheme.secondary,
+            unfocusedLabelColor = MaterialTheme.colorScheme.onSurface,
             errorBorderColor = Color.Red,
             errorLabelColor = Color.Red
         ),

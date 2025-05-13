@@ -15,6 +15,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.desarrollo.myapp.ui.pages.HomeTenant
 import com.desarrollo.myapp.ui.pages.MyLocalsTenant
 import com.desarrollo.myapp.ui.pages.RegisterLocal
+import com.desarrollo.myapp.ui.pages.RegisterUser
 import com.desarrollo.myapp.viewmodel.HomeViewModel
 
 
@@ -50,6 +51,9 @@ fun NavGraph(navController: NavHostController) {
 
         composable("registerLocal") {
             RegisterLocal(navController = navController)
+        }
+        composable("registerUser") {
+            RegisterUser(navController = navController)
         }
     }
 }

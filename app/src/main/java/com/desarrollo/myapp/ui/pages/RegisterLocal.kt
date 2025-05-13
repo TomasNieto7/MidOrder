@@ -49,6 +49,9 @@ import coil.compose.rememberAsyncImagePainter
 import com.desarrollo.myapp.repository.LocalRepository
 import com.desarrollo.myapp.ui.components.NavBarTenant
 import com.desarrollo.myapp.ui.components.OrderTopBarBack
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+
 
 @Composable
 fun RegisterLocal(navController: NavController) {
@@ -77,7 +80,8 @@ fun RegisterLocal(navController: NavController) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp)
+                .padding(padding) // <- padding del Scaffold
+                .padding(16.dp)   // <- tu padding personalizado
                 .verticalScroll(rememberScrollState())
         ) {
             var nombre by remember { mutableStateOf("") }
@@ -85,11 +89,6 @@ fun RegisterLocal(navController: NavController) {
             var ubicacion by remember { mutableStateOf("") }
             var espacio by remember { mutableStateOf("") }
             var capacidad by remember { mutableStateOf("") }
-            var imageUri by remember { mutableStateOf<Uri?>(null) }
-
-            val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) {
-                imageUri = it
-            }
 
             OutlinedTextField(
                 value = nombre,
@@ -144,13 +143,13 @@ fun RegisterLocal(navController: NavController) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(150.dp)
-                    .background(Color.LightGray, RoundedCornerShape(8.dp))
+                    .background(Color(0xFFCCE5FF), RoundedCornerShape(8.dp)) // Un celeste suave
                     .clickable { launcher.launch("image/*") },
                 contentAlignment = Alignment.Center
             ) {
                 if (imageUris.isNotEmpty()) {
                     LazyRow {
-                        items(imageUris.size) { uri ->
+                        items(imageUris) { uri -> // ✅ uri es el valor real, no un índice
                             Image(
                                 painter = rememberAsyncImagePainter(uri),
                                 contentDescription = null,
@@ -191,8 +190,13 @@ fun RegisterLocal(navController: NavController) {
                                 capacidad = capacidad,
                                 userId = userId, // ✅ ya no es nullable
                                 imageUris = imageUris.toList(),
-                                onSuccess = { /* ... */ },
-                                onFailure = { /* ... */ }
+                                onSuccess = {
+                                    Toast.makeText(context, "Registro exitoso", Toast.LENGTH_SHORT).show()
+                                    navController.popBackStack() // Regresa a la pantalla anterior
+                                },
+                                onFailure = {
+                                    Toast.makeText(context, "Error al registrar", Toast.LENGTH_SHORT).show()
+                                }
                             )
                         } else {
                             Toast.makeText(context, "Faltan datos o imágenes", Toast.LENGTH_SHORT).show()
