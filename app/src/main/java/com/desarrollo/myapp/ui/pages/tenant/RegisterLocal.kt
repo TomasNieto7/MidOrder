@@ -1,4 +1,4 @@
-package com.desarrollo.myapp.ui.pages
+package com.desarrollo.myapp.ui.pages.tenant
 
 import android.net.Uri
 import android.widget.Toast
@@ -49,7 +49,6 @@ import coil.compose.rememberAsyncImagePainter
 import com.desarrollo.myapp.repository.LocalRepository
 import com.desarrollo.myapp.ui.components.NavBarTenant
 import com.desarrollo.myapp.ui.components.OrderTopBarBack
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 
 

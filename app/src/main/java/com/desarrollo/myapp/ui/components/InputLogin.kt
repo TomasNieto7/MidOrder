@@ -1,6 +1,8 @@
 package com.desarrollo.myapp.ui.components
 
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -25,8 +27,10 @@ fun InputLogin(label: String, placeholder: String, state: MutableState<String>) 
         label = { Text(label) },
         placeholder = { Text(placeholder) },
         singleLine = true,
+        shape = MaterialTheme.shapes.medium,
         //isError = text.isEmpty(), // Ejemplo de estado de error
-        modifier = Modifier.padding(10.dp),
+        modifier = Modifier
+            .fillMaxWidth(),
         colors = TextFieldDefaults.outlinedTextFieldColors(
             focusedBorderColor = MaterialTheme.colorScheme.primary,
             unfocusedBorderColor = MaterialTheme.colorScheme.primary,

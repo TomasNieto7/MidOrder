@@ -5,16 +5,16 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.desarrollo.myapp.ui.pages.HomeSeller
-import com.desarrollo.myapp.ui.pages.LocationsSeller
+import com.desarrollo.myapp.ui.pages.seller.HomeSeller
+import com.desarrollo.myapp.ui.pages.seller.LocationsSeller
 import com.desarrollo.myapp.ui.pages.LoginPage
-import com.desarrollo.myapp.ui.pages.OrderDetails
-import com.desarrollo.myapp.ui.pages.OrdersSeller
-import com.desarrollo.myapp.ui.pages.QRSeller
+import com.desarrollo.myapp.ui.pages.seller.OrderDetails
+import com.desarrollo.myapp.ui.pages.seller.OrdersSeller
+import com.desarrollo.myapp.ui.pages.seller.QRSeller
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.desarrollo.myapp.ui.pages.HomeTenant
-import com.desarrollo.myapp.ui.pages.MyLocalsTenant
-import com.desarrollo.myapp.ui.pages.RegisterLocal
+import com.desarrollo.myapp.ui.pages.tenant.HomeTenant
+import com.desarrollo.myapp.ui.pages.tenant.MyLocalsTenant
+import com.desarrollo.myapp.ui.pages.tenant.RegisterLocal
 import com.desarrollo.myapp.ui.pages.RegisterUser
 import com.desarrollo.myapp.viewmodel.HomeViewModel
 

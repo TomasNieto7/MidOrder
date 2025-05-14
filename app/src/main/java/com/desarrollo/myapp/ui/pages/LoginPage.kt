@@ -1,26 +1,21 @@
 package com.desarrollo.myapp.ui.pages
 
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -29,7 +24,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -46,10 +40,11 @@ fun LoginPage(navController: NavController) {
     val loginRepository = remember { LoginRepository() }
     val scope = rememberCoroutineScope()
 
+
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(vertical = 16.dp, horizontal = 40.dp),
         contentAlignment = Alignment.Center
     ) {
         Column(
@@ -57,20 +52,17 @@ fun LoginPage(navController: NavController) {
             verticalArrangement = Arrangement.Center
         ) {
             Logo()
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
             // Inputs ocupando el ancho máximo
-            val inputWidth = 300.dp // Establece que los Inputs ocupen todo el ancho
-            Inputs(emailState, passwordState, inputWidth)
+            Inputs(emailState, passwordState)
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
             // Fila con botón y texto, ajustando al tamaño de los Inputs
             Column(
                 modifier = Modifier
-                    .width(inputWidth) // Esto hace que el Row tenga el mismo ancho que los inputs
-                    .padding(horizontal = 16.dp), // Agregar algo de padding si es necesario
-
+                    .fillMaxWidth() // Esto hace que el Row tenga el mismo ancho que los inputs
             ) {
                 // Botón de inicio de sesión con el mismo tamaño que los Inputs
                 Button(
@@ -98,9 +90,9 @@ fun LoginPage(navController: NavController) {
                             }
                         }
                     },
-                    shape = MaterialTheme.shapes.large,
+                    shape = MaterialTheme.shapes.medium,
                     modifier = Modifier
-                        .width(inputWidth) // El botón ocupa el mismo ancho que los inputs
+                        .fillMaxWidth() // El botón ocupa el mismo ancho que los inputs
                         .height(50.dp), // Altura personalizada si es necesario
                     contentPadding = PaddingValues(
                         start = 0.dp,
@@ -121,7 +113,7 @@ fun LoginPage(navController: NavController) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center,
-                    modifier = Modifier.width(inputWidth)
+                    modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
                         text = "¿No estás registrado?",
@@ -142,9 +134,10 @@ fun LoginPage(navController: NavController) {
 }
 
 @Composable
-fun Inputs(emailState: MutableState<String>, passwordState: MutableState<String>, width: Dp) {
-    Column(modifier = Modifier.width(width)) {
+fun Inputs(emailState: MutableState<String>, passwordState: MutableState<String>) {
+    Column(modifier = Modifier.fillMaxWidth()) {
         InputLogin("Correo", "ejemplo@mail.com", emailState)
+        Spacer(modifier = Modifier.height(16.dp))
         InputLogin("Contraseña", "********", passwordState)
     }
 }

@@ -1,34 +1,27 @@
 package com.desarrollo.myapp.repository
 
 import com.desarrollo.myapp.model.UserSession
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 
 class LoginRepository {
+    private val auth = FirebaseAuth.getInstance()
     private val db = FirebaseFirestore.getInstance()
 
     suspend fun login(email: String, password: String): UserSession? {
         return try {
-            val querySnapshot = db.collection("users")
-                .whereEqualTo("email", email)
-                .whereEqualTo("password", password)
-                .get()
-                .await()
+            // Autenticación con FirebaseAuth
+            val authResult = auth.signInWithEmailAndPassword(email, password).await()
+            val user = authResult.user ?: return null
 
-            if (!querySnapshot.isEmpty) {
-                val document = querySnapshot.documents[0]
-                val role = document.getString("role")
-                val userId = document.id
+            // Obtener rol desde Firestore
+            val docSnapshot = db.collection("users").document(user.uid).get().await()
+            val role = docSnapshot.getString("role") ?: return null
 
-                if (role != null) {
-                    UserSession(userId, role)
-                } else {
-                    null
-                }
-            } else {
-                null
-            }
+            UserSession(user.uid, role)
         } catch (e: Exception) {
+            e.printStackTrace()
             null
         }
     }

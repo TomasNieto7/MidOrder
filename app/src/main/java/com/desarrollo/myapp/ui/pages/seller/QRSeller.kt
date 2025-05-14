@@ -1,4 +1,4 @@
-package com.desarrollo.myapp.ui.pages
+package com.desarrollo.myapp.ui.pages.seller
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

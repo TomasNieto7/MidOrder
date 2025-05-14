@@ -1,4 +1,4 @@
-package com.desarrollo.myapp.ui.pages
+package com.desarrollo.myapp.ui.pages.seller
 
 import android.content.Context
 import android.util.Log
@@ -33,7 +33,6 @@ import com.desarrollo.myapp.viewmodel.HomeViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.LocalContext
-import com.desarrollo.myapp.ui.components.Logo
 
 
 @OptIn(ExperimentalMaterial3Api::class)
