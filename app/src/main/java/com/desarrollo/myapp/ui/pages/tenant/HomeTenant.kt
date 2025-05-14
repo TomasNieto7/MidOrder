@@ -50,10 +50,13 @@ fun HomeTenant(navController: NavController) {
 
     val viewModel: HomeTenantViewModel = viewModel()
     val hasLocals by viewModel.hasLocals
+    val hasOrders by viewModel.hasOrders
+
 
     LaunchedEffect(userId) {
         userId?.let {
             viewModel.checkIfUserHasLocals(it)
+            viewModel.checkIfLocalHasOrders(it)
         }
     }
 
@@ -77,12 +80,38 @@ fun HomeTenant(navController: NavController) {
             Spacer(modifier = Modifier.height(16.dp))
             when (hasLocals) {
                 true -> {
-                    // Aquí mantienes tu UI normal cuando sí hay locales
-                    Text("Este usuario tiene locales.") // o lista, etc.
+                    when(hasOrders) {
+                        true -> {
+                            Text("Este usuario tiene orders.") // o lista, etc.
+                        }
+                        false -> {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                    Text(
+                                        text = "Tu local aún no tiene ninguna orden.",
+                                        style = MaterialTheme.typography.bodyLarge,
+                                        textAlign = TextAlign.Center
+                                    )
+                                }
+                            }
+                        }
+                        null -> {
+                            // Puedes dejar esto como un loader simple
+                            Box(
+                                modifier = Modifier.fillMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                CircularProgressIndicator()
+                            }
+                        }
+                    }
                 }
 
                 false -> {
-                    // Mostrar mensaje y botón centrado
                     Box(
                         modifier = Modifier
                             .fillMaxSize(),

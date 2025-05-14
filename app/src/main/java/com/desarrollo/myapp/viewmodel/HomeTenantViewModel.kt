@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.desarrollo.myapp.repository.LocalRepository
+import com.desarrollo.myapp.repository.OrdersRepository
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
 
@@ -15,6 +16,11 @@ class HomeTenantViewModel : ViewModel() {
     private val _hasLocals = mutableStateOf<Boolean?>(null)
     val hasLocals: State<Boolean?> = _hasLocals
 
+    private val ordersRepository = OrdersRepository()
+
+    private val _hasOrders = mutableStateOf<Boolean?>(null)
+    val hasOrders: State<Boolean?> = _hasOrders
+
     fun checkIfUserHasLocals(userId: String) {
         viewModelScope.launch {
             try {
@@ -23,6 +29,18 @@ class HomeTenantViewModel : ViewModel() {
             } catch (e: Exception) {
                 Log.e("HomeTenantVM", "Error checking user locals", e)
                 _hasLocals.value = false
+            }
+        }
+    }
+
+    fun checkIfLocalHasOrders(localID: String) {
+        viewModelScope.launch {
+            try {
+                val orders = ordersRepository.getOrdersByLocal(localID)
+                _hasOrders.value = orders.isNotEmpty()
+            } catch (e: Exception) {
+                Log.e("HomeTenantVM", "Error checking user locals", e)
+                _hasOrders.value = false
             }
         }
     }
