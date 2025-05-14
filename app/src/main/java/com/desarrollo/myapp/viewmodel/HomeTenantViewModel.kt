@@ -18,11 +18,7 @@ class HomeTenantViewModel : ViewModel() {
     fun checkIfUserHasLocals(userId: String) {
         viewModelScope.launch {
             try {
-                val ownerRef = FirebaseFirestore.getInstance()
-                    .collection("users")
-                    .document(userId)
-
-                val locals = localRepository.getLocalsByOwner(ownerRef) // <-- tu función aquí
+                val locals = localRepository.getLocalsByOwner(userId)
                 _hasLocals.value = locals.isNotEmpty()
             } catch (e: Exception) {
                 Log.e("HomeTenantVM", "Error checking user locals", e)

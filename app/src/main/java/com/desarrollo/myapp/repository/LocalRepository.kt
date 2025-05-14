@@ -25,10 +25,10 @@ class LocalRepository {
     }
 
 
-    suspend fun getLocalsByOwner(ownerRef: DocumentReference): List<Map<String, Any>> {
+    suspend fun getLocalsByOwner(ownerId: String): List<Map<String, Any>> {
         return try {
             val result = db.collection("locals")
-                .whereEqualTo("owner", ownerRef)
+                .whereEqualTo("owner", ownerId)
                 .get()
                 .await()
 
@@ -58,17 +58,15 @@ class LocalRepository {
         val storage = FirebaseStorage.getInstance()
 
         val localData = hashMapOf(
-            "nombre" to nombre,
-            "categoria" to categoria,
-            "ubicacion" to ubicacion,
-            "espacio" to espacio,
-            "capacidad" to capacidad,
-            "ref" to userId
+            "localName" to nombre,
+            "category" to categoria,
+            "address" to ubicacion,
+            "space" to espacio,
+            "capacity" to capacidad,
+            "owner" to userId
         )
 
-        db.collection("users")
-            .document(userId)
-            .collection("locals")
+        db.collection("locals")
             .add(localData)
             .addOnSuccessListener { documentRef ->
                 val localId = documentRef.id
@@ -105,7 +103,7 @@ class LocalRepository {
                         if (failed) {
                             handleFailure(Exception("Una o más imágenes fallaron"))
                         } else {
-                            documentRef.update("imagenes", imageUrls)
+                            documentRef.update("pictures", imageUrls)
                                 .addOnSuccessListener {
                                     Log.d(TAG, "Documento actualizado con URLs")
                                     onSuccess()
