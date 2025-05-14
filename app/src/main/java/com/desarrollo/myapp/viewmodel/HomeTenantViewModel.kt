@@ -21,14 +21,19 @@ class HomeTenantViewModel : ViewModel() {
     private val _hasOrders = mutableStateOf<Boolean?>(null)
     val hasOrders: State<Boolean?> = _hasOrders
 
+    private val _locals = mutableStateOf<List<Map<String, Any>>>(emptyList())
+    val locals: State<List<Map<String, Any>>> = _locals
+
     fun checkIfUserHasLocals(userId: String) {
         viewModelScope.launch {
             try {
                 val locals = localRepository.getLocalsByOwner(userId)
                 _hasLocals.value = locals.isNotEmpty()
+                _locals.value = locals
             } catch (e: Exception) {
                 Log.e("HomeTenantVM", "Error checking user locals", e)
                 _hasLocals.value = false
+                _locals.value = emptyList()
             }
         }
     }
