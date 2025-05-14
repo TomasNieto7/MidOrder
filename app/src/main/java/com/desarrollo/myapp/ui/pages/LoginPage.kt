@@ -3,24 +3,9 @@ package com.desarrollo.myapp.ui.pages
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -40,7 +25,6 @@ fun LoginPage(navController: NavController) {
     val loginRepository = remember { LoginRepository() }
     val scope = rememberCoroutineScope()
 
-
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -53,28 +37,33 @@ fun LoginPage(navController: NavController) {
         ) {
             Logo()
             Spacer(modifier = Modifier.height(20.dp))
-
-            // Inputs ocupando el ancho máximo
             Inputs(emailState, passwordState)
-
             Spacer(modifier = Modifier.height(20.dp))
 
-            // Fila con botón y texto, ajustando al tamaño de los Inputs
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth() // Esto hace que el Row tenga el mismo ancho que los inputs
-            ) {
-                // Botón de inicio de sesión con el mismo tamaño que los Inputs
+            Column(modifier = Modifier.fillMaxWidth()) {
                 Button(
                     onClick = {
                         scope.launch {
-                            val userSession =
-                                loginRepository.login(emailState.value, passwordState.value)
-                            if (userSession != null) {
-                                saveUserId(context, userSession.userId)
-                                when (userSession.role.lowercase()) {
-                                    "seller" -> navController.navigate("homeSeller")
-                                    "tenant" -> navController.navigate("homeTenant")
+                            val email = emailState.value.trim()
+                            val password = passwordState.value
+
+                            // Validación simple
+                            if (email.isEmpty() || password.isEmpty()) {
+                                Toast.makeText(
+                                    context,
+                                    "Por favor, completa todos los campos",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                return@launch
+                            }
+
+                            val result = loginRepository.login(email, password)
+
+                            if (result != null) {
+                                saveUserId(context, result.userId)
+                                when (result.role.lowercase()) {
+                                    "vendedor" -> navController.navigate("homeSeller")
+                                    "locatario" -> navController.navigate("homeTenant")
                                     else -> Toast.makeText(
                                         context,
                                         "Rol desconocido",
@@ -84,7 +73,7 @@ fun LoginPage(navController: NavController) {
                             } else {
                                 Toast.makeText(
                                     context,
-                                    "Correo o contraseña incorrectos",
+                                    "Correo o contraseña incorrectos o problema de red",
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }
@@ -92,24 +81,18 @@ fun LoginPage(navController: NavController) {
                     },
                     shape = MaterialTheme.shapes.medium,
                     modifier = Modifier
-                        .fillMaxWidth() // El botón ocupa el mismo ancho que los inputs
-                        .height(50.dp), // Altura personalizada si es necesario
-                    contentPadding = PaddingValues(
-                        start = 0.dp,
-                        top = 8.dp,
-                        end = 0.dp,
-                        bottom = 8.dp
-                    ),
+                        .fillMaxWidth()
+                        .height(50.dp),
+                    contentPadding = PaddingValues(0.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary      // Color del texto/íconos
+                        containerColor = MaterialTheme.colorScheme.primary
                     )
                 ) {
                     Text("Iniciar sesión", fontSize = 20.sp)
                 }
 
-                Spacer(modifier = Modifier.height(16.dp)) // Espacio entre el texto y el botón
+                Spacer(modifier = Modifier.height(16.dp))
 
-                // Texto para redirigir a registro
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center,
@@ -120,12 +103,14 @@ fun LoginPage(navController: NavController) {
                         fontSize = 18.sp,
                         color = MaterialTheme.colorScheme.onSurface
                     )
-                    Spacer(modifier = Modifier.height(1.dp)) // 👈 espaciado fino
+                    Spacer(modifier = Modifier.height(1.dp))
                     Text(
                         text = "Regístrate",
                         color = MaterialTheme.colorScheme.primary,
                         fontSize = 20.sp,
-                        modifier = Modifier.clickable { navController.navigate("registerUser") }
+                        modifier = Modifier.clickable {
+                            navController.navigate("registerUser")
+                        }
                     )
                 }
             }
@@ -141,7 +126,6 @@ fun Inputs(emailState: MutableState<String>, passwordState: MutableState<String>
         InputLogin("Contraseña", "********", passwordState)
     }
 }
-
 
 fun saveUserId(context: Context, userId: String) {
     val sharedPref = context.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)

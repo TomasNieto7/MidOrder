@@ -1,5 +1,6 @@
 package com.desarrollo.myapp.ui.pages
 
+import RegisterRepository
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -30,7 +31,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.desarrollo.myapp.repository.RegisterRepository
+
 import com.desarrollo.myapp.ui.components.InputLogin
 import com.desarrollo.myapp.ui.components.Logo
 import kotlinx.coroutines.launch

@@ -11,11 +11,9 @@ class LoginRepository {
 
     suspend fun login(email: String, password: String): UserSession? {
         return try {
-            // Autenticación con FirebaseAuth
             val authResult = auth.signInWithEmailAndPassword(email, password).await()
             val user = authResult.user ?: return null
 
-            // Obtener rol desde Firestore
             val docSnapshot = db.collection("users").document(user.uid).get().await()
             val role = docSnapshot.getString("role") ?: return null
 
