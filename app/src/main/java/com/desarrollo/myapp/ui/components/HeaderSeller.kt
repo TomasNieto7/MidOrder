@@ -5,12 +5,15 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavController
 import com.composables.icons.lucide.ArrowLeft
 import com.composables.icons.lucide.Bell
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.User
+import androidx.compose.material3.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -24,7 +27,12 @@ fun MidOrderTopBar() {
             IconButton(onClick = { /* Acción de usuario */ }) {
                 Icon(Lucide.User, contentDescription = "Perfil")
             }
-        }
+        },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = MaterialTheme.colorScheme.primary,         // Color de fondo
+            titleContentColor = Color.White,            // Color del texto del título
+            actionIconContentColor = Color.White        // Color de los íconos de acción
+        )
     )
 }
 

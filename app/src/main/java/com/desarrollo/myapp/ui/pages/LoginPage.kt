@@ -8,7 +8,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -85,7 +87,8 @@ fun LoginPage(navController: NavController) {
                         .height(50.dp),
                     contentPadding = PaddingValues(0.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = Color.White
                     )
                 ) {
                     Text("Iniciar sesión", fontSize = 20.sp)
@@ -106,7 +109,8 @@ fun LoginPage(navController: NavController) {
                     Spacer(modifier = Modifier.height(1.dp))
                     Text(
                         text = "Regístrate",
-                        color = MaterialTheme.colorScheme.primary,
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        fontWeight = FontWeight.SemiBold,
                         fontSize = 20.sp,
                         modifier = Modifier.clickable {
                             navController.navigate("registerUser")

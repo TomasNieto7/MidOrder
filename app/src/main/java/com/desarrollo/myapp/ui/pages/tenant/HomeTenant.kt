@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
@@ -27,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -65,9 +67,16 @@ fun HomeTenant(navController: NavController) {
         bottomBar = { NavBarTenant(navController) },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { showBottomSheet = true }
+                onClick = { showBottomSheet = true },
+                containerColor = MaterialTheme.colorScheme.primary,     // Color de fondo
+                contentColor = Color.White,             // Color del ícono
+                modifier = Modifier.size(74.dp)         // Tamaño del botón (por defecto es 56.dp)
             ) {
-                Icon(Icons.Default.Add, contentDescription = "Agregar")
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = "Agregar",
+                    modifier = Modifier.size(38.dp)     // Tamaño del ícono
+                )
             }
         }
     ) { padding ->

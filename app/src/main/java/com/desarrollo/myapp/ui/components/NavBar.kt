@@ -1,10 +1,15 @@
 package com.desarrollo.myapp.ui.components
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.Divider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -71,35 +76,52 @@ fun NavBarTenant(navController: NavController, modifier: Modifier = Modifier) {
         BottomNavItem("Mis Locales", "myLocalsTenant", Lucide.Bookmark),
     )
 
-    NavigationBar(modifier = modifier) {
-        items.forEach { item ->
-            val isSelected = currentRoute == item.route
+    Column(modifier = modifier.fillMaxWidth()) {
+        Divider(
+            color = Color(0xFF00528A), // Color del borde superior
+            thickness = 1.dp, // grosor más natural
+            modifier = Modifier.fillMaxWidth()
+        )
 
-            NavigationBarItem(
-                icon = {
-                    Box(
-                        contentAlignment = Alignment.Center,
-                        modifier = Modifier
-                            .size(40.dp)
-                    ) {
+        NavigationBar(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            items.forEach { item ->
+                val isSelected = currentRoute == item.route
+
+                NavigationBarItem(
+                    icon = {
                         Icon(
                             imageVector = item.icon,
                             contentDescription = item.label,
-                            tint = Color.Unspecified
+                            tint = if (isSelected) MaterialTheme.colorScheme.onPrimary else Color.Gray
                         )
-                    }
-                },
-                label = { Text(item.label) },
-                selected = isSelected,
-                onClick = {
-                    navController.navigate(item.route) {
-                        popUpTo("homeTenant") { inclusive = false }
-                        launchSingleTop = true
-                    }
-                }
-            )
+                    },
+                    label = {
+                        Text(
+                            item.label,
+                            color = if (isSelected) MaterialTheme.colorScheme.onPrimary else Color.Gray
+                        )
+                    },
+                    selected = isSelected,
+                    onClick = {
+                        navController.navigate(item.route) {
+                            popUpTo("homeTenant") { inclusive = false }
+                            launchSingleTop = true
+                        }
+                    },
+                    colors = NavigationBarItemDefaults.colors(
+                        indicatorColor = Color(0x2200528A),
+                        selectedIconColor = MaterialTheme.colorScheme.onPrimary,
+                        selectedTextColor = MaterialTheme.colorScheme.onPrimary,
+                        unselectedIconColor = Color.Gray,
+                        unselectedTextColor = Color.Gray
+                    )
+                )
+            }
         }
     }
 }
+
 
 
