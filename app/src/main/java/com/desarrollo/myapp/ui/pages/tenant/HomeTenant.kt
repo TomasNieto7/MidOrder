@@ -38,7 +38,7 @@ import com.composables.icons.lucide.ScanQrCode
 import com.desarrollo.myapp.ui.components.MidOrderTopBar
 import com.desarrollo.myapp.ui.components.NavBarTenant
 import com.desarrollo.myapp.ui.components.OrderBottomSheet
-import com.desarrollo.myapp.ui.components.SearchBar
+import com.desarrollo.myapp.ui.components.SearchBarInput
 import com.desarrollo.myapp.viewmodel.HomeTenantViewModel
 
 
@@ -86,7 +86,7 @@ fun HomeTenant(navController: NavController) {
                 .padding(padding)
                 .padding(horizontal = 16.dp)
         ) {
-            SearchBar()
+            SearchBarInput()
             Spacer(modifier = Modifier.height(16.dp))
             when (hasLocals) {
                 true -> {

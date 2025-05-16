@@ -202,7 +202,8 @@ fun CardLocation(
                     colors = ButtonDefaults.buttonColors(
                         containerColor = if (isAdded) MaterialTheme.colorScheme.primary else Color(
                             0xFF974545
-                        )
+                        ),
+                        contentColor = Color.White
                     )
                 ) {
                     Text(if (isAdded) "Agregar" else "Eliminar")

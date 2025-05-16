@@ -18,8 +18,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.desarrollo.myapp.ui.components.NavBar
 import com.desarrollo.myapp.ui.components.OrderBottomSheet
-import com.desarrollo.myapp.ui.components.SearchBar
 import com.desarrollo.myapp.ui.components.MidOrderTopBar
+import com.desarrollo.myapp.ui.components.SearchBarInput
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -35,7 +35,7 @@ fun LocationsSeller(navController: NavController) {
             .padding(padding)
             .padding(horizontal = 16.dp)
         ) {
-            SearchBar()
+            SearchBarInput()
             Spacer(modifier = Modifier.height(16.dp))
         }
     }
