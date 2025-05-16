@@ -29,7 +29,10 @@ fun NavGraph(navController: NavHostController) {
             HomeSeller(navController = navController, viewModel = homeViewModel)
         }
         composable("ordersSeller") { OrdersSeller(navController) }
-        composable("locationSeller") { LocationsSeller(navController) }
+        composable("locationSeller") {
+            val homeViewModel: HomeViewModel = viewModel()
+            LocationsSeller(navController, homeViewModel)
+        }
 
         // Ruta para la subpágina de detalles de la orden
         composable("orderDetail/{orderId}") { backStackEntry ->

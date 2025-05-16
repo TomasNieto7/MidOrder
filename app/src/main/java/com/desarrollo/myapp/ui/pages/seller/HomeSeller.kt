@@ -1,20 +1,18 @@
 package com.desarrollo.myapp.ui.pages.seller
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Divider
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -26,10 +24,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.composables.icons.lucide.Lucide
+import com.composables.icons.lucide.Plus
 import com.desarrollo.myapp.ui.components.CardLocation
 import com.desarrollo.myapp.ui.components.MidOrderTopBar
 import com.desarrollo.myapp.ui.components.NavBar
@@ -61,9 +62,16 @@ fun HomeSeller(
         bottomBar = { NavBar(navController) },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { showBottomSheet = true }
+                onClick = { showBottomSheet = true },
+                containerColor = MaterialTheme.colorScheme.primary,     // Color de fondo
+                contentColor = Color.White,             // Color del ícono
+                modifier = Modifier.size(74.dp)         // Tamaño del botón (por defecto es 56.dp)
             ) {
-                Icon(Icons.Default.Add, contentDescription = "Agregar")
+                Icon(
+                    imageVector = Lucide.Plus,
+                    contentDescription = "Agregar",
+                    modifier = Modifier.size(38.dp)     // Tamaño del ícono
+                )
             }
         }
     ) { padding ->
@@ -75,32 +83,33 @@ fun HomeSeller(
         ) {
             SearchBarInput()
             LazyColumn(
-                    modifier = Modifier.weight(1f),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-            item {
-                Divider(modifier = Modifier.height(1.dp))
+                item {
+                    Divider(modifier = Modifier.height(1.dp))
+                }
+                items(locals.size) { index ->
+                    val local = locals[index]
+                    val images = (local["pictures"] as? List<*>)?.mapNotNull { it?.toString() }
+                        ?: emptyList()
+                    val localId = local["id"]?.toString() ?: return@items
+                    val isSaved = savedLocalIds.contains(localId)
+
+                    CardLocation(
+                        localName = local["localName"].toString(),
+                        category = local["category"].toString(),
+                        address = local["address"].toString(),
+                        urlImages = images,
+                        isAdded = isSaved,
+                        onToggle = {
+                            viewModel.toggleLocalSave(userId!!, localId)
+                        }
+                    )
+
+
+                }
             }
-            items(locals.size) { index ->
-                val local = locals[index]
-                val images = (local["pictures"] as? List<*>)?.mapNotNull { it?.toString() } ?: emptyList()
-                val localId = local["id"]?.toString() ?: return@items
-                val isSaved = savedLocalIds.contains(localId)
-
-                CardLocation(
-                    localName = local["localName"].toString(),
-                    category = local["category"].toString(),
-                    address = local["address"].toString(),
-                    urlImages = images,
-                    isAdded = isSaved,
-                    onToggle = {
-                        viewModel.toggleLocalSave(userId!!, localId)
-                    }
-                )
-
-
-            }
-        }
 
         }
     }
