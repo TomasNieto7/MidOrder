@@ -1,6 +1,7 @@
 package com.desarrollo.myapp.ui.pages.seller
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -18,6 +19,7 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -43,11 +45,16 @@ fun HomeSeller(
     viewModel: HomeViewModel = viewModel()
 ) {
     val locals by viewModel.locals.collectAsState()
+    val savedLocalIds by viewModel.savedLocalIds.collectAsState()
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var showBottomSheet by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
     val userId = getUserId(context)
+
+    LaunchedEffect(userId) {
+        userId?.let { viewModel.loadSavedLocals(it) }
+    }
 
     Scaffold(
         topBar = { MidOrderTopBar() },
@@ -77,14 +84,21 @@ fun HomeSeller(
             items(locals.size) { index ->
                 val local = locals[index]
                 val images = (local["pictures"] as? List<*>)?.mapNotNull { it?.toString() } ?: emptyList()
+                val localId = local["id"]?.toString() ?: return@items
+                val isSaved = savedLocalIds.contains(localId)
 
                 CardLocation(
                     localName = local["localName"].toString(),
                     category = local["category"].toString(),
                     address = local["address"].toString(),
                     urlImages = images,
-                    isAdded = true
+                    isAdded = isSaved,
+                    onToggle = {
+                        viewModel.toggleLocalSave(userId!!, localId)
+                    }
                 )
+
+
             }
         }
 

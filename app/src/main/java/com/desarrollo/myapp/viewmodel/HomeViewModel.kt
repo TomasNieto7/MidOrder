@@ -20,6 +20,37 @@ class HomeViewModel : ViewModel() {
         loadLocals()
     }
 
+    private val _savedLocalIds = MutableStateFlow<Set<String>>(emptySet())
+    val savedLocalIds: StateFlow<Set<String>> = _savedLocalIds
+
+    fun loadSavedLocals(userId: String) {
+        viewModelScope.launch {
+            try {
+                val result = repository.getSavedLocals(userId)
+                _savedLocalIds.value = result.toSet()
+            } catch (e: Exception) {
+                Log.e("HomeViewModel", "Error al cargar guardados", e)
+            }
+        }
+    }
+
+    fun toggleLocalSave(userId: String, localId: String) {
+        viewModelScope.launch {
+            val isSaved = _savedLocalIds.value.contains(localId)
+            try {
+                if (isSaved) {
+                    repository.removeLocalFromUser(userId, localId)
+                } else {
+                    repository.saveLocalForUser(userId, localId)
+                }
+                loadSavedLocals(userId) // refresca
+            } catch (e: Exception) {
+                Log.e("HomeViewModel", "Error guardando/eliminando", e)
+            }
+        }
+    }
+
+
     internal fun loadLocals() {
         viewModelScope.launch {
             // Llamamos a getLocals y asignamos la respuesta a _locals
@@ -27,6 +58,11 @@ class HomeViewModel : ViewModel() {
             Log.d("HomeSeller", "localsA: ${_locals.value}")
         }
     }
+
+    fun saveLocalForUser(userId: String, localId: String, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
+        repository.saveLocalReference(userId, localId, onSuccess, onFailure)
+    }
+
 }
 
 

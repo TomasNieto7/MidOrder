@@ -54,7 +54,8 @@ fun CardLocation(
     category: String,
     address: String,
     urlImages: List<String>,
-    isAdded: Boolean
+    isAdded: Boolean,
+    onToggle: () -> Unit
 ) {
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
@@ -197,16 +198,14 @@ fun CardLocation(
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(
-                    onClick = { /* Acción */ },
+                    onClick = { onToggle() }, // ← nuevo parámetro
                     modifier = Modifier.align(Alignment.End),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = if (isAdded) MaterialTheme.colorScheme.primary else Color(
-                            0xFF974545
-                        ),
+                        containerColor = if (isAdded) Color(0xFF974545) else MaterialTheme.colorScheme.primary,
                         contentColor = Color.White
                     )
                 ) {
-                    Text(if (isAdded) "Agregar" else "Eliminar")
+                    Text(if (isAdded) "Eliminar" else "Agregar")
                 }
             }
         }

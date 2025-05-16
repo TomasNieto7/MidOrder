@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import android.util.Log
 import com.google.android.gms.tasks.Tasks
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
@@ -16,7 +17,9 @@ class LocalRepository {
         return try {
             val result = db.collection("locals").get().await()
             result.map { document ->
-                document.data
+                val data = document.data.toMutableMap()
+                data["id"] = document.id  // 👈 Agrega el ID del documento
+                data
             }
         } catch (e: Exception) {
             Log.e("LocalRepository", "Error fetching locals", e)
@@ -189,4 +192,59 @@ class LocalRepository {
                 onFailure(e)
             }
     }
+
+    fun saveLocalReference(
+        userId: String,
+        localId: String,
+        onSuccess: () -> Unit,
+        onFailure: (Exception) -> Unit
+    ) {
+        val localRef = db.collection("locals").document(localId)
+        val data = mapOf(
+            "localRef" to localRef,
+            "savedAt" to FieldValue.serverTimestamp()
+        )
+
+        db.collection("users")
+            .document(userId)
+            .collection("savedLocals")
+            .document(localId)
+            .set(data)
+            .addOnSuccessListener { onSuccess() }
+            .addOnFailureListener { onFailure(it) }
+    }
+
+    suspend fun getSavedLocals(userId: String): List<String> {
+        return try {
+            val snapshot = db.collection("users")
+                .document(userId)
+                .collection("savedLocals")
+                .get()
+                .await()
+
+            snapshot.documents.map { it.id }
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
+
+    suspend fun saveLocalForUser(userId: String, localId: String) {
+        db.collection("users")
+            .document(userId)
+            .collection("savedLocals")
+            .document(localId)
+            .set(mapOf("saved" to true)) // puedes guardar más info si quieres
+            .await()
+    }
+
+    suspend fun removeLocalFromUser(userId: String, localId: String) {
+        db.collection("users")
+            .document(userId)
+            .collection("savedLocals")
+            .document(localId)
+            .delete()
+            .await()
+    }
+
+
 }
