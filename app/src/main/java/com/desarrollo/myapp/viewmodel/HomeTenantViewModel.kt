@@ -9,6 +9,7 @@ import com.desarrollo.myapp.repository.LocalRepository
 import com.desarrollo.myapp.repository.OrdersRepository
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 class HomeTenantViewModel : ViewModel() {
     private val localRepository = LocalRepository()

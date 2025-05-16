@@ -7,10 +7,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,12 +16,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -42,14 +39,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
+import com.composables.icons.lucide.Lucide
+import com.composables.icons.lucide.Upload
 import com.desarrollo.myapp.repository.LocalRepository
 import com.desarrollo.myapp.ui.components.NavBarTenant
 import com.desarrollo.myapp.ui.components.OrderTopBarBack
-import androidx.compose.foundation.lazy.items
 
 
 @Composable
@@ -142,7 +142,10 @@ fun RegisterLocal(navController: NavController) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(150.dp)
-                    .background(Color(0xFFCCE5FF), RoundedCornerShape(8.dp)) // Un celeste suave
+                    .background(
+                        Color.Black.copy(alpha = 0.8f),
+                        RoundedCornerShape(8.dp)
+                    ) // Un celeste suave
                     .clickable { launcher.launch("image/*") },
                 contentAlignment = Alignment.Center
             ) {
@@ -160,23 +163,21 @@ fun RegisterLocal(navController: NavController) {
                         }
                     }
                 } else {
-                    Icon(Icons.Default.KeyboardArrowUp, contentDescription = "Upload")
+                    Icon(
+                        Lucide.Upload,
+                        contentDescription = "Upload",
+                        tint = Color.White.copy(alpha = 0.8f),
+                        modifier = Modifier.size(80.dp)
+                    )
                 }
             }
 
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
+            Column(
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Button(
-                    onClick = { navController.popBackStack() },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF9C4242))
-                ) {
-                    Text("Cancelar")
-                }
                 Button(
                     onClick = {
                         if (userId != null && imageUris.size in 1..5) {
@@ -190,20 +191,47 @@ fun RegisterLocal(navController: NavController) {
                                 userId = userId, // ✅ ya no es nullable
                                 imageUris = imageUris.toList(),
                                 onSuccess = {
-                                    Toast.makeText(context, "Registro exitoso", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(context, "Registro exitoso", Toast.LENGTH_SHORT)
+                                        .show()
                                     navController.popBackStack() // Regresa a la pantalla anterior
                                 },
                                 onFailure = {
-                                    Toast.makeText(context, "Error al registrar", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(
+                                        context,
+                                        "Error al registrar",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
                                 }
                             )
                         } else {
-                            Toast.makeText(context, "Faltan datos o imágenes", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "Faltan datos o imágenes", Toast.LENGTH_SHORT)
+                                .show()
                         }
                     },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF005C9A))
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF005C9A),
+                        contentColor = Color.White
+                    ),
+                    shape = MaterialTheme.shapes.medium,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(50.dp)
                 ) {
-                    Text("Agregar")
+                    Text("Agregar", fontSize = 20.sp, fontWeight = FontWeight.SemiBold)
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+                Button(
+                    onClick = { navController.popBackStack() },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF9C4242),
+                        contentColor = Color.White
+                    ),
+                    shape = MaterialTheme.shapes.medium,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(50.dp)
+                ) {
+                    Text("Cancelar", fontSize = 20.sp, fontWeight = FontWeight.SemiBold)
                 }
             }
         }

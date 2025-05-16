@@ -46,7 +46,8 @@ fun OrderTopBarBack(navController: NavController) {
             IconButton(onClick = { navController.popBackStack() }) {
                 Icon(
                     imageVector = Lucide.ArrowLeft, // Flecha hacia atrás
-                    contentDescription = "Regresar"
+                    contentDescription = "Regresar",
+                    tint = Color.White
                 )
             }
         },
@@ -57,7 +58,12 @@ fun OrderTopBarBack(navController: NavController) {
             IconButton(onClick = { /* Acción de usuario */ }) {
                 Icon(Lucide.User, contentDescription = "Perfil")
             }
-        }
+        },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = MaterialTheme.colorScheme.primary,         // Color de fondo
+            titleContentColor = Color.White,            // Color del texto del título
+            actionIconContentColor = Color.White        // Color de los íconos de acción
+        )
     )
 }
 

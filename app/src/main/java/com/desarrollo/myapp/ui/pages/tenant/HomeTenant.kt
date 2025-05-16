@@ -8,9 +8,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -34,6 +33,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.composables.icons.lucide.Lucide
+import com.composables.icons.lucide.ScanQrCode
 import com.desarrollo.myapp.ui.components.MidOrderTopBar
 import com.desarrollo.myapp.ui.components.NavBarTenant
 import com.desarrollo.myapp.ui.components.OrderBottomSheet
@@ -73,7 +74,7 @@ fun HomeTenant(navController: NavController) {
                 modifier = Modifier.size(74.dp)         // Tamaño del botón (por defecto es 56.dp)
             ) {
                 Icon(
-                    imageVector = Icons.Default.Add,
+                    imageVector = Lucide.ScanQrCode,
                     contentDescription = "Agregar",
                     modifier = Modifier.size(38.dp)     // Tamaño del ícono
                 )
@@ -89,10 +90,11 @@ fun HomeTenant(navController: NavController) {
             Spacer(modifier = Modifier.height(16.dp))
             when (hasLocals) {
                 true -> {
-                    when(hasOrders) {
+                    when (hasOrders) {
                         true -> {
                             Text("Este usuario tiene orders.") // o lista, etc.
                         }
+
                         false -> {
                             Box(
                                 modifier = Modifier
@@ -108,6 +110,7 @@ fun HomeTenant(navController: NavController) {
                                 }
                             }
                         }
+
                         null -> {
                             // Puedes dejar esto como un loader simple
                             Box(
@@ -133,9 +136,15 @@ fun HomeTenant(navController: NavController) {
                                 textAlign = TextAlign.Center
                             )
                             Spacer(modifier = Modifier.height(16.dp))
-                            Button(onClick = {
-                                navController.navigate("registerLocal")
-                            }) {
+                            Button(
+                                onClick = {
+                                    navController.navigate("registerLocal")
+                                },
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = MaterialTheme.colorScheme.primary,
+                                    contentColor = Color.White
+                                )
+                            ) {
                                 Text("Registrar local")
                             }
                         }

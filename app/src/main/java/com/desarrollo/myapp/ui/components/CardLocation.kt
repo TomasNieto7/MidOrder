@@ -13,8 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -25,6 +24,7 @@ import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -42,6 +42,8 @@ import coil.compose.AsyncImage
 import com.composables.icons.lucide.ChevronLeft
 import com.composables.icons.lucide.ChevronRight
 import com.composables.icons.lucide.Lucide
+import com.composables.icons.lucide.Pencil
+import com.desarrollo.myapp.repository.LocalRepository
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
@@ -216,7 +218,11 @@ fun CardLocationTenant(
     category: String,
     address: String,
     urlImages: List<String>,
-    isAdded: Boolean
+    documentId: String,
+    localRepository: LocalRepository,
+    userId: String,
+    onDeleted: () -> Unit,
+    showSnackbar: (String) -> Unit
 ) {
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
@@ -224,6 +230,8 @@ fun CardLocationTenant(
 
     // Estado para saber si las imágenes están cargando
     val isLoading = remember { mutableStateOf(true) }
+    // Nuevo estado para mostrar el diálogo
+    var showDeleteDialog by remember { mutableStateOf(false) }
 
     Card(
         colors = CardDefaults.cardColors(
@@ -256,12 +264,9 @@ fun CardLocationTenant(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .clip(RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)),
-                            onLoading = {
-                                isLoading.value = true
-                            },
-                            onSuccess = {
-                                isLoading.value = false
-                            }
+                            onLoading = { isLoading.value = true },
+                            onSuccess = { isLoading.value = false },
+                            onError = { isLoading.value = false }
                         )
                     }
 
@@ -344,8 +349,8 @@ fun CardLocationTenant(
                         elevation = FloatingActionButtonDefaults.elevation(6.dp)
                     ) {
                         Icon(
-                            imageVector = Icons.Default.Add,
-                            contentDescription = "Agregar",
+                            imageVector = Lucide.Pencil,
+                            contentDescription = "Edit",
                             modifier = Modifier.size(20.dp)
                         )
                     }
@@ -375,13 +380,11 @@ fun CardLocationTenant(
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(
-                    onClick = { /* Acción */ },
+                    onClick = { showDeleteDialog = true },
                     modifier = Modifier.align(Alignment.End),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = if (isAdded)
-                            MaterialTheme.colorScheme.primary
-                        else
-                            Color(0xFF974545)
+                        containerColor = Color(0xFF9C4242),
+                        contentColor = Color.White
                     )
                 ) {
                     Text("Eliminar")
@@ -389,7 +392,44 @@ fun CardLocationTenant(
             }
         }
     }
+    // AlertDialog de confirmación
+    if (showDeleteDialog) {
+        AlertDialog(
+            onDismissRequest = { showDeleteDialog = false },
+            title = { Text("¿Eliminar local?") },
+            text = { Text("¿Estás seguro de que quieres eliminar este local? Esta acción no se puede deshacer.") },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showDeleteDialog = false
+                        localRepository.deleteLocal(
+                            documentId = documentId,
+                            userId = userId,
+                            onSuccess = {
+                                showSnackbar("Local eliminado correctamente")
+                                onDeleted() // si quieres refrescar la lista
+                            },
+                            onFailure = {
+                                showSnackbar("Error al eliminar local: ${it.localizedMessage ?: "Error desconocido"}")
+                            }
+                        )
+
+                    }
+                ) {
+                    Text("Sí", color = Color.Red)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDeleteDialog = false }) {
+                    Text("Cancelar")
+                }
+            }
+        )
+    }
+
 }
+
+
 
 
 

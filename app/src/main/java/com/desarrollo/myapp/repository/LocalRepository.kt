@@ -3,7 +3,7 @@ package com.desarrollo.myapp.repository
 import android.content.Context
 import android.net.Uri
 import android.util.Log
-import com.google.firebase.firestore.DocumentReference
+import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
@@ -25,18 +25,20 @@ class LocalRepository {
     }
 
 
-    suspend fun getLocalsByOwner(ownerId: String): List<Map<String, Any>> {
+    suspend fun getLocalsByOwner(userId: String): List<Map<String, Any>> {
         return try {
-            val result = db.collection("locals")
-                .whereEqualTo("owner", ownerId)
+            val snapshot = db.collection("locals")
+                .whereEqualTo("owner", userId)
                 .get()
                 .await()
 
-            result.map { document ->
-                document.data
+            snapshot.documents.map { doc ->
+                val data = doc.data ?: emptyMap<String, Any>()
+                // Agregamos el documentId en el mapa con la clave "id"
+                data + ("id" to doc.id)
             }
         } catch (e: Exception) {
-            Log.e("LocalRepository", "Error fetching locals by owner", e)
+            // Aquí podrías hacer logging o manejo de errores más avanzado si quieres
             emptyList()
         }
     }
@@ -148,5 +150,43 @@ class LocalRepository {
             }
     }
 
+    fun deleteLocal(
+        documentId: String,
+        userId: String,
+        onSuccess: () -> Unit,
+        onFailure: (Exception) -> Unit
+    ) {
+        val db = FirebaseFirestore.getInstance()
+        val storage = FirebaseStorage.getInstance()
+        val documentRef = db.collection("locals").document(documentId)
 
+        documentRef.delete()
+            .addOnSuccessListener {
+                val storageRef = storage.reference.child("users/$userId/locals/$documentId")
+
+                storageRef.listAll()
+                    .addOnSuccessListener { listResult ->
+                        val deleteTasks = listResult.items.map { it.delete() }
+
+                        if (deleteTasks.isEmpty()) {
+                            onSuccess()
+                        } else {
+                            Tasks.whenAll(deleteTasks)
+                                .addOnSuccessListener {
+                                    onSuccess()
+                                }
+                                .addOnFailureListener { e ->
+                                    onFailure(e)
+                                }
+                        }
+                    }
+                    .addOnFailureListener { e ->
+                        Log.w("Storage", "No se pudieron listar imágenes: ${e.message}")
+                        onSuccess()
+                    }
+            }
+            .addOnFailureListener { e ->
+                onFailure(e)
+            }
+    }
 }
