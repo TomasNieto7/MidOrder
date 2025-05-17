@@ -16,6 +16,7 @@ import com.desarrollo.myapp.ui.pages.tenant.HomeTenant
 import com.desarrollo.myapp.ui.pages.tenant.MyLocalsTenant
 import com.desarrollo.myapp.ui.pages.tenant.RegisterLocal
 import com.desarrollo.myapp.ui.pages.RegisterUser
+import com.desarrollo.myapp.ui.pages.seller.AddOrders
 import com.desarrollo.myapp.viewmodel.HomeViewModel
 
 
@@ -32,6 +33,10 @@ fun NavGraph(navController: NavHostController) {
         composable("locationSeller") {
             val homeViewModel: HomeViewModel = viewModel()
             LocationsSeller(navController, homeViewModel)
+        }
+        composable("addOrders") {
+            val homeViewModel: HomeViewModel = viewModel()
+            AddOrders(navController, homeViewModel)
         }
 
         // Ruta para la subpágina de detalles de la orden
