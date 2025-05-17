@@ -55,7 +55,8 @@ fun CardLocation(
     address: String,
     urlImages: List<String>,
     isAdded: Boolean,
-    onToggle: () -> Unit
+    onToggle: () -> Unit,
+    capacity: Int
 ) {
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
@@ -197,6 +198,13 @@ fun CardLocation(
                     color = Color.DarkGray
                 )
                 Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = "Espacio disponible: $capacity",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color(0xFF4CAF50), // verde para destacar, puedes cambiarlo
+                    fontWeight = FontWeight.Medium
+                )
+                Spacer(modifier = Modifier.height(16.dp))
                 Button(
                     onClick = { onToggle() }, // ← nuevo parámetro
                     modifier = Modifier.align(Alignment.End),
@@ -222,7 +230,8 @@ fun CardLocationTenant(
     localRepository: LocalRepository,
     userId: String,
     onDeleted: () -> Unit,
-    showSnackbar: (String) -> Unit
+    showSnackbar: (String) -> Unit,
+    capacity: Int
 ) {
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
@@ -377,6 +386,13 @@ fun CardLocationTenant(
                     text = address,
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color.DarkGray
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = "Espacio disponible: $capacity",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color(0xFF4CAF50), // verde para destacar, puedes cambiarlo
+                    fontWeight = FontWeight.Medium
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(

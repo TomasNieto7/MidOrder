@@ -109,6 +109,10 @@ fun LocationsSeller(
                         val images = (local["pictures"] as? List<*>)?.mapNotNull { it?.toString() } ?: emptyList()
                         val localId = local["id"]?.toString() ?: return@items
                         val isSaved = savedLocalIds.contains(localId)
+                        val capacityValue = (local["capacity"] as? Number)?.toInt() ?: 0
+                        val bookedUnits = (local["bookedUnits"] as? Number)?.toInt() ?: 0  // si tienes esta info, sino pon 0
+
+                        val capacidadDisponible = capacityValue - bookedUnits
 
                         CardLocation(
                             localName = local["localName"].toString(),
@@ -118,7 +122,8 @@ fun LocationsSeller(
                             isAdded = isSaved,
                             onToggle = {
                                 userId?.let { viewModel.toggleLocalSave(it, localId) }
-                            }
+                            },
+                            capacity = capacidadDisponible
                         )
                     }
                 }

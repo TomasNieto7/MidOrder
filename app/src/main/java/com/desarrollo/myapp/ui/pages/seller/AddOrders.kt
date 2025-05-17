@@ -1,10 +1,5 @@
 package com.desarrollo.myapp.ui.pages.seller
 
-import android.net.Uri
-import android.util.Log
-import android.widget.Toast
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -31,7 +26,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -45,9 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.desarrollo.myapp.repository.LocalRepository
 import com.desarrollo.myapp.ui.components.NavBar
-import com.desarrollo.myapp.ui.components.NavBarTenant
 import com.desarrollo.myapp.ui.components.OrderTopBarBack
 import com.desarrollo.myapp.ui.pages.tenant.getUserId2
 import com.desarrollo.myapp.viewmodel.HomeViewModel
@@ -101,7 +93,11 @@ fun AddOrders(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(56.dp)
-                        .border(1.dp, MaterialTheme.colorScheme.outline, MaterialTheme.shapes.medium)
+                        .border(
+                            1.dp,
+                            MaterialTheme.colorScheme.outline,
+                            MaterialTheme.shapes.medium
+                        )
                         .padding(horizontal = 16.dp, vertical = 16.dp)
                         .clickable { expandedLocals = true },
                     contentAlignment = Alignment.CenterStart
@@ -123,7 +119,7 @@ fun AddOrders(
                         DropdownMenuItem(
                             text = { Text(local["localName"].toString()) },
                             onClick = {
-                                location = local["name"].toString()
+                                location = local["localName"].toString()
                                 expandedLocals = false
                             },
                             modifier = Modifier.fillMaxWidth()
@@ -140,7 +136,11 @@ fun AddOrders(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(56.dp)
-                        .border(1.dp, MaterialTheme.colorScheme.outline, MaterialTheme.shapes.medium)
+                        .border(
+                            1.dp,
+                            MaterialTheme.colorScheme.outline,
+                            MaterialTheme.shapes.medium
+                        )
                         .padding(horizontal = 16.dp, vertical = 16.dp)
                         .clickable { expandedSizes = true },
                     contentAlignment = Alignment.CenterStart

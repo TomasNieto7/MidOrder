@@ -123,7 +123,10 @@ fun MyLocalsTenant(navController: NavController) {
                                         ?: emptyList()
 
                                 val documentId = local["id"] as? String ?: ""
+                                val capacityValue = (local["capacity"] as? Number)?.toInt() ?: 0
+                                val bookedUnits = (local["bookedUnits"] as? Number)?.toInt() ?: 0
 
+                                val capacidadDisponible = capacityValue - bookedUnits
                                 CardLocationTenant(
                                     localName = local["localName"].toString(),
                                     category = local["category"].toString(),
@@ -133,7 +136,8 @@ fun MyLocalsTenant(navController: NavController) {
                                     localRepository = repository,
                                     userId = userId ?: "",
                                     onDeleted = reloadLocals,
-                                    showSnackbar = { message -> showSnackbar(message) }
+                                    showSnackbar = { message -> showSnackbar(message) },
+                                    capacity = capacidadDisponible
                                 )
                             }
                             Spacer(modifier = Modifier.height(16.dp))

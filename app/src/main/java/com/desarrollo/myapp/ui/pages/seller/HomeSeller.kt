@@ -95,7 +95,10 @@ fun HomeSeller(
                         ?: emptyList()
                     val localId = local["id"]?.toString() ?: return@items
                     val isSaved = savedLocalIds.contains(localId)
+                    val capacityValue = (local["capacity"] as? Number)?.toInt() ?: 0
+                    val bookedUnits = (local["bookedUnits"] as? Number)?.toInt() ?: 0  // si tienes esta info, sino pon 0
 
+                    val capacidadDisponible = capacityValue - bookedUnits
                     CardLocation(
                         localName = local["localName"].toString(),
                         category = local["category"].toString(),
@@ -104,7 +107,8 @@ fun HomeSeller(
                         isAdded = isSaved,
                         onToggle = {
                             viewModel.toggleLocalSave(userId!!, localId)
-                        }
+                        },
+                        capacity = capacidadDisponible
                     )
 
 
