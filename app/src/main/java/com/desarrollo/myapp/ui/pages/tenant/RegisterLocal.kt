@@ -86,7 +86,6 @@ fun RegisterLocal(navController: NavController) {
             var nombre by remember { mutableStateOf("") }
             var categoria by remember { mutableStateOf("") }
             var ubicacion by remember { mutableStateOf("") }
-            var espacio by remember { mutableStateOf("") }
             var capacidad by remember { mutableStateOf("") }
 
             OutlinedTextField(
@@ -117,22 +116,17 @@ fun RegisterLocal(navController: NavController) {
             )
 
             OutlinedTextField(
-                value = espacio,
-                onValueChange = { espacio = it },
-                label = { Text("Espacio") },
+                value = capacidad,
+                onValueChange = { capacidad = it },
+                label = { Text("¿Cuántos paquetes pequeños (25x15cm) puedes almacenar al mismo tiempo?") },
+                placeholder = { Text("Ejemplo: 20") },
+                supportingText = {
+                    Text("Usaremos esta capacidad para calcular espacio según el tamaño del paquete.")
+                },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 8.dp)
-            )
-
-            OutlinedTextField(
-                value = capacidad,
-                onValueChange = { capacidad = it },
-                label = { Text("Capacidad") },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -180,20 +174,20 @@ fun RegisterLocal(navController: NavController) {
             ) {
                 Button(
                     onClick = {
-                        if (userId != null && imageUris.size in 1..5) {
+                        val capacidadInt = capacidad.toIntOrNull()
+                        if (userId != null && imageUris.size in 1..5 && capacidadInt != null && capacidadInt > 0) {
                             localRepo.postLocal(
                                 context = context,
                                 nombre = nombre,
                                 categoria = categoria,
                                 ubicacion = ubicacion,
-                                espacio = espacio,
-                                capacidad = capacidad,
-                                userId = userId, // ✅ ya no es nullable
+                                capacidad = capacidadInt, // aún como String si tu función espera String
+                                userId = userId,
                                 imageUris = imageUris.toList(),
                                 onSuccess = {
                                     Toast.makeText(context, "Registro exitoso", Toast.LENGTH_SHORT)
                                         .show()
-                                    navController.popBackStack() // Regresa a la pantalla anterior
+                                    navController.popBackStack()
                                 },
                                 onFailure = {
                                     Toast.makeText(
@@ -204,8 +198,11 @@ fun RegisterLocal(navController: NavController) {
                                 }
                             )
                         } else {
-                            Toast.makeText(context, "Faltan datos o imágenes", Toast.LENGTH_SHORT)
-                                .show()
+                            Toast.makeText(
+                                context,
+                                "Faltan datos válidos o la capacidad es incorrecta",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     },
                     colors = ButtonDefaults.buttonColors(

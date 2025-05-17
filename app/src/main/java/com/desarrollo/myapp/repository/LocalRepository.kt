@@ -51,8 +51,7 @@ class LocalRepository {
         nombre: String,
         categoria: String,
         ubicacion: String,
-        espacio: String,
-        capacidad: String,
+        capacidad: Int,
         userId: String,
         imageUris: List<Uri>,
         onSuccess: () -> Unit,
@@ -66,7 +65,6 @@ class LocalRepository {
             "localName" to nombre,
             "category" to categoria,
             "address" to ubicacion,
-            "space" to espacio,
             "capacity" to capacidad,
             "owner" to userId
         )
