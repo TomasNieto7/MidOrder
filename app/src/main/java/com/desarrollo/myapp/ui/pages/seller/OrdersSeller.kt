@@ -91,7 +91,7 @@ fun OrdersSeller(
 @Composable
 fun OrderCard(order: Map<String, Any>, onClick: () -> Unit) {
     val orderId = order["orderId"]?.toString() ?: ""
-    val local = order["local"]?.toString() ?: "Desconocido"
+    val localName = order["localName"]?.toString() ?: "Desconocido"
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -115,7 +115,7 @@ fun OrderCard(order: Map<String, Any>, onClick: () -> Unit) {
 //                Spacer(Modifier.width(8.dp))
                 Column {
                     Text("Orden  #$orderId", style = MaterialTheme.typography.bodyLarge)
-                    Text(local, style = MaterialTheme.typography.bodySmall, color = Color.Gray)
+                    Text(localName, style = MaterialTheme.typography.bodySmall, color = Color.Gray)
                 }
             }
             Icon(

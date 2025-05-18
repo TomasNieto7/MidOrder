@@ -79,9 +79,20 @@ class OrdersRepository {
                 .get()
                 .await()
 
-            result.map { document ->
+            result.mapNotNull { document ->
                 val data = document.data.toMutableMap()
-                data["id"] = document.id  // agrega el id explícitamente
+                data["id"] = document.id
+
+                // Obtener el ID del local
+                val localId = data["local"] as? String ?: return@mapNotNull null
+
+                // Buscar el documento del local para obtener su nombre
+                val localSnapshot = db.collection("locals").document(localId).get().await()
+                val localName = localSnapshot.getString("localName") ?: "Local sin nombre"
+
+                // Agregar el nombre del local al mapa
+                data["localName"] = localName
+
                 data
             }
         } catch (e: Exception) {
@@ -89,6 +100,7 @@ class OrdersRepository {
             emptyList()
         }
     }
+
 }
 
 fun generateUserFriendlyId(length: Int = 8): String {
