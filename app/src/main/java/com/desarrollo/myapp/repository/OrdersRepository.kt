@@ -1,10 +1,11 @@
 package com.desarrollo.myapp.repository
 
 import android.util.Log
+import com.google.firebase.Firebase
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.tasks.await
 import java.util.Date
-import java.util.UUID
 
 class OrdersRepository {
 
@@ -62,7 +63,8 @@ class OrdersRepository {
             )
 
             db.collection("orders").add(newOrder).await()
-            db.collection("locals").document(localId).update("capacity", currentCapacity - usedUnits).await()
+            db.collection("locals").document(localId)
+                .update("capacity", currentCapacity - usedUnits).await()
 
             orderId
         } catch (e: Exception) {
@@ -101,6 +103,36 @@ class OrdersRepository {
         }
     }
 
+    suspend fun getOrderByRef(orderRef: String): Map<String, Any>? {
+        return try {
+            val doc = Firebase.firestore
+                .collection("orders")
+                .document(orderRef)
+                .get()
+                .await()
+
+            val data = doc.data?.toMutableMap() ?: return null
+            data["id"] = doc.id
+
+            // Obtener el ID del local
+            val localId = data["local"] as? String ?: return null
+
+            // Buscar el documento del local
+            val localSnapshot = Firebase.firestore
+                .collection("locals")
+                .document(localId)
+                .get()
+                .await()
+
+            val localName = localSnapshot.getString("localName") ?: "Local sin nombre"
+            data["localName"] = localName
+
+            data
+        } catch (e: Exception) {
+            Log.e("OrdersRepository", "Error fetching order by ref", e)
+            null
+        }
+    }
 }
 
 fun generateUserFriendlyId(length: Int = 8): String {

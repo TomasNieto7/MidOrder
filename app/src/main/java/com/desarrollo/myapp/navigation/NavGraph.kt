@@ -42,11 +42,10 @@ fun NavGraph(navController: NavHostController) {
             AddOrders(navController, homeViewModel)
         }
 
-        // Ruta para la subpágina de detalles de la orden
-//        composable("orderDetail/{orderId}") { backStackEntry ->
-//            val orderId = backStackEntry.arguments?.getString("orderId")?.toInt() ?: return@composable
-//            OrderDetails(orderId = orderId, navController = navController)
-//        }
+        composable("orderDetail/{orderId}") { backStackEntry ->
+            val orderId = backStackEntry.arguments?.getString("orderId") ?: ""
+            OrderDetails(navController = navController, orderId = orderId)
+        }
 
         // Ruta para la subpágina dentro de "orderDetail" (por ejemplo, ver QR)
         composable("orderDetail/{orderId}/qr") { backStackEntry ->

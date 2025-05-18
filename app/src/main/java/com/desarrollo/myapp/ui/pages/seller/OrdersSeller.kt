@@ -1,5 +1,6 @@
 package com.desarrollo.myapp.ui.pages.seller
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -16,6 +17,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -33,6 +35,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.composables.icons.lucide.Boxes
 import com.composables.icons.lucide.Lucide
+import com.composables.icons.lucide.Plus
 import com.composables.icons.lucide.Timer
 import com.desarrollo.myapp.ui.components.MidOrderTopBar
 import com.desarrollo.myapp.ui.components.NavBar
@@ -58,7 +61,21 @@ fun OrdersSeller(
 
     Scaffold(
         topBar = { MidOrderTopBar() },
-        bottomBar = { NavBar(navController) }
+        bottomBar = { NavBar(navController) },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = { navController.navigate("addOrders") },
+                containerColor = MaterialTheme.colorScheme.primary,     // Color de fondo
+                contentColor = Color.White,             // Color del ícono
+                modifier = Modifier.size(74.dp)         // Tamaño del botón (por defecto es 56.dp)
+            ) {
+                Icon(
+                    imageVector = Lucide.Plus,
+                    contentDescription = "Agregar",
+                    modifier = Modifier.size(38.dp)     // Tamaño del ícono
+                )
+            }
+        }
     ) { padding ->
         Column(
             modifier = Modifier
@@ -76,7 +93,7 @@ fun OrdersSeller(
                 ) {
                     items(orders.size) { i ->
                         val order = orders[i]
-                        OrderCard(order = order, onClick = { /* navegar a detalles */ })
+                        OrderCard(order = order, onClick = { navController.navigate("orderDetail/${order["id"]}") })
                     }
                 }
             }
