@@ -90,7 +90,7 @@ fun OrdersSeller(
 // Tarjeta de Orden con función onClick
 @Composable
 fun OrderCard(order: Map<String, Any>, onClick: () -> Unit) {
-    val orderId = order["id"]?.toString() ?: ""
+    val orderId = order["orderId"]?.toString() ?: ""
     val local = order["local"]?.toString() ?: "Desconocido"
     Card(
         modifier = Modifier

@@ -47,9 +47,9 @@ class OrdersRepository {
 
             if (usedUnits > currentCapacity) return null
 
-            val orderId = UUID.randomUUID().toString()
+            val orderId = generateUserFriendlyId()
             val newOrder = hashMapOf(
-                "id" to orderId,
+                "orderId" to orderId,
                 "sender" to "/users/$senderId",
                 "address" to recipientName,
                 "size" to packageSize,
@@ -89,6 +89,11 @@ class OrdersRepository {
             emptyList()
         }
     }
+}
 
-
+fun generateUserFriendlyId(length: Int = 8): String {
+    val chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+    return (1..length)
+        .map { chars.random() }
+        .joinToString("")
 }
