@@ -71,4 +71,24 @@ class OrdersRepository {
         }
     }
 
+    suspend fun getOrdersByUser(userId: String): List<Map<String, Any>> {
+        return try {
+            val userPath = "/users/$userId"
+            val result = db.collection("orders")
+                .whereEqualTo("sender", userPath)
+                .get()
+                .await()
+
+            result.map { document ->
+                val data = document.data.toMutableMap()
+                data["id"] = document.id  // agrega el id explícitamente
+                data
+            }
+        } catch (e: Exception) {
+            Log.e("OrdersRepository", "Error fetching orders by user", e)
+            emptyList()
+        }
+    }
+
+
 }

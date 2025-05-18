@@ -18,6 +18,7 @@ import com.desarrollo.myapp.ui.pages.tenant.RegisterLocal
 import com.desarrollo.myapp.ui.pages.RegisterUser
 import com.desarrollo.myapp.ui.pages.seller.AddOrders
 import com.desarrollo.myapp.viewmodel.HomeViewModel
+import com.desarrollo.myapp.viewmodel.OrdersViewModel
 
 
 @ExperimentalMaterial3Api
@@ -29,7 +30,9 @@ fun NavGraph(navController: NavHostController) {
             val homeViewModel: HomeViewModel = viewModel()
             HomeSeller(navController = navController, viewModel = homeViewModel)
         }
-        composable("ordersSeller") { OrdersSeller(navController) }
+        composable("ordersSeller") {
+            val ordersViewModel: OrdersViewModel = viewModel()
+            OrdersSeller(navController, ordersViewModel) }
         composable("locationSeller") {
             val homeViewModel: HomeViewModel = viewModel()
             LocationsSeller(navController, homeViewModel)
@@ -40,10 +43,10 @@ fun NavGraph(navController: NavHostController) {
         }
 
         // Ruta para la subpágina de detalles de la orden
-        composable("orderDetail/{orderId}") { backStackEntry ->
-            val orderId = backStackEntry.arguments?.getString("orderId")?.toInt() ?: return@composable
-            OrderDetails(orderId = orderId, navController = navController)
-        }
+//        composable("orderDetail/{orderId}") { backStackEntry ->
+//            val orderId = backStackEntry.arguments?.getString("orderId")?.toInt() ?: return@composable
+//            OrderDetails(orderId = orderId, navController = navController)
+//        }
 
         // Ruta para la subpágina dentro de "orderDetail" (por ejemplo, ver QR)
         composable("orderDetail/{orderId}/qr") { backStackEntry ->

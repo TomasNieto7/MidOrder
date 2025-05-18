@@ -1,123 +1,85 @@
 package com.desarrollo.myapp.ui.pages.seller
 
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.composables.icons.lucide.Lucide
-import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.composables.icons.lucide.Boxes
+import com.composables.icons.lucide.Lucide
+import com.composables.icons.lucide.Timer
+import com.desarrollo.myapp.ui.components.MidOrderTopBar
 import com.desarrollo.myapp.ui.components.NavBar
-import com.desarrollo.myapp.ui.components.OrderTopBarBack
+import com.desarrollo.myapp.ui.components.SearchBarInput
+import com.desarrollo.myapp.viewmodel.OrdersViewModel
 
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun OrderDetails(orderId: Int, navController: NavController) {
-    // Lista de pedidos simulados
-    val orders = listOf(
-        OrderDetail(1234, "Local 1", "20 cm x 20 cm", "Tomas Alberto", "--/--/--", "10/03/2025"),
-        OrderDetail(1232, "Local 2", "15 cm x 15 cm", "María López", "01/04/2025", "15/04/2025"),
-        OrderDetail(1233, "Local 3", "30 cm x 30 cm", "Carlos Rivera", "05/05/2025", "20/05/2025")
-    )
-    val order = orders.firstOrNull { it.id == orderId } ?: return
+fun OrderDetails(
+    navController: NavController,
+    viewModel: OrdersViewModel = viewModel()
+) {
+    val orders by viewModel.orders.collectAsState()
+    val context = LocalContext.current
+    val userId = getUserId(context)
+
+    LaunchedEffect(userId) {
+        userId?.let {
+            viewModel.loadOrdersForUser(it)
+        }
+    }
 
     Scaffold(
-        topBar = { OrderTopBarBack(navController = navController) },
+        topBar = { MidOrderTopBar() },
         bottomBar = { NavBar(navController) }
     ) { padding ->
         Column(
             modifier = Modifier
                 .padding(padding)
-                .fillMaxSize() // Esto hace que el Column ocupe todo el espacio disponible
+                .padding(horizontal = 16.dp, vertical = 16.dp)
+                .fillMaxSize()
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp) // Usar verticalArrangement aquí
-            ) {
-                // Mostrar la información de la orden
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(
-                        text = "Orden  #${order.id}",
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.weight(1f),
-                        fontSize = 28.sp
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Icon(
-                        imageVector = Lucide.Boxes,
-                        contentDescription = "Logo",
-                        modifier = Modifier.size(24.dp)
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Text(text = "Detalles", fontWeight = FontWeight.Bold)
-                Text(text = order.local)
-                Text(text = "ID del local: #${order.id}")
-                Text(text = "Paquete: ${order.packageSize}")
-                Text(text = "Remitente: ${order.sender}")
-                Text(text = "Fecha de recolección: ${order.pickupDate}")
-                Text(text = "Fecha de entrega: ${order.deliveryDate}")
-            }
-
-            // Spacer para empujar los botones hacia abajo
-            Spacer(modifier = Modifier.weight(1f)) // Esto empuja los botones hacia abajo
-
-            // Agregamos los botones en la parte inferior
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            ) {
-                Button(
-                    onClick = { /* Acción para Ver guía */ },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD9BAF5)),
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text("Ver guía")
-                }
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Button(
-                    onClick = { navController.navigate("orderDetail/${order.id}/qr") },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD9BAF5)),
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text("Ver QR")
+            SearchBarInput()
+            if (orders.isEmpty()) {
+                Text("No tienes órdenes.")
+            } else {
+                LazyColumn {
+                    items(orders.size) { i ->
+                        val order = orders[i]
+                        OrderCard(order = order, onClick = { /* navegar a detalles */ })
+                    }
                 }
             }
+
+
         }
     }
 }
-
-
-
 
 
 
