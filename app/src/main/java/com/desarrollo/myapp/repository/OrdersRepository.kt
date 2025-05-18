@@ -3,6 +3,8 @@ package com.desarrollo.myapp.repository
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
+import java.util.Date
+import java.util.UUID
 
 class OrdersRepository {
 
@@ -23,4 +25,50 @@ class OrdersRepository {
             emptyList()
         }
     }
+
+    suspend fun createOrderAndUpdateCapacity(
+        localId: String,
+        senderId: String,
+        recipientName: String,
+        packageSize: String
+    ): String? {
+        return try {
+            val localDoc = db.collection("locals").document(localId).get().await()
+            val currentCapacity = localDoc.getDouble("capacity") ?: return null
+
+            val sizeToUnits = mapOf(
+                "15x15" to 1,
+                "25x15" to 2,
+                "35x25" to 3,
+                "45x35" to 4,
+                "60x40" to 5
+            )
+            val usedUnits = sizeToUnits[packageSize] ?: return null
+
+            if (usedUnits > currentCapacity) return null
+
+            val orderId = UUID.randomUUID().toString()
+            val newOrder = hashMapOf(
+                "id" to orderId,
+                "sender" to "/users/$senderId",
+                "address" to recipientName,
+                "size" to packageSize,
+                "quantity" to 1,
+                "local" to localId,
+                "location" to "/locals/$localId",
+                "sent" to Date(),
+                "localArrived" to Date(),
+                "delivered" to Date()
+            )
+
+            db.collection("orders").add(newOrder).await()
+            db.collection("locals").document(localId).update("capacity", currentCapacity - usedUnits).await()
+
+            orderId
+        } catch (e: Exception) {
+            Log.e("OrdersRepository", "Error creando orden", e)
+            null
+        }
+    }
+
 }

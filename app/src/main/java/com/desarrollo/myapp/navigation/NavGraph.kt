@@ -47,7 +47,7 @@ fun NavGraph(navController: NavHostController) {
 
         // Ruta para la subpágina dentro de "orderDetail" (por ejemplo, ver QR)
         composable("orderDetail/{orderId}/qr") { backStackEntry ->
-            val orderId = backStackEntry.arguments?.getString("orderId")?.toInt() ?: return@composable
+            val orderId = backStackEntry.arguments?.getString("orderId") ?: return@composable
             QRSeller(orderId = orderId, navController = navController)
         }
         composable("homeTenant") {

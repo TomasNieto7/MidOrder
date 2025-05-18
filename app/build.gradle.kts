@@ -41,6 +41,9 @@ android {
 }
 
 dependencies {
+    implementation ("com.google.zxing:core:3.5.1")
+    implementation ("androidx.compose.ui:ui-graphics:1.5.1")
+    implementation ("io.coil-kt:coil-compose:2.4.0")
     implementation("com.google.firebase:firebase-auth-ktx")
     implementation("com.google.firebase:firebase-storage-ktx")
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.4")

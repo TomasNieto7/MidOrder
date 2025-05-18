@@ -1,34 +1,15 @@
 package com.desarrollo.myapp.ui.pages.seller
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -50,27 +31,41 @@ fun AddOrders(
     navController: NavController,
     viewModel: HomeViewModel = viewModel()
 ) {
-
     val context = LocalContext.current
     val userId = getUserId2(context)
-    var expandedLocals by remember { mutableStateOf(false) }
+
+    var expandedLocations by remember { mutableStateOf(false) }
+    var expandedSizes by remember { mutableStateOf(false) }
 
     val allLocals by viewModel.locals.collectAsState()
     val savedLocalIds by viewModel.savedLocalIds.collectAsState()
     val savedLocals = allLocals.filter { it["id"].toString() in savedLocalIds }
 
-    var expandedSizes by remember { mutableStateOf(false) }
-    val sizes =
-        listOf(
-            "Pequeño (25x15cm)",
-            "Mediano (35x25cm)",
-            "Grande (45x35cm)",
-            "Extra grande (60x40cm)"
-        )
+    val sizeLabels = mapOf(
+        "25x15" to "Pequeño (25x15cm)",
+        "35x25" to "Mediano (35x25cm)",
+        "45x35" to "Grande (45x35cm)",
+        "60x40" to "Extra Grande (60x40cm)"
+    )
 
-    var location by remember { mutableStateOf("") }
-    var size by remember { mutableStateOf("Dimensiones del paquete") }
-    var nameAddress by remember { mutableStateOf("") }
+    val sizeOptions = sizeLabels.keys.toList()
+
+    val sizeToUnits = mapOf(
+        "25x15" to 1,
+        "35x25" to 2,
+        "45x35" to 3,
+        "60x40" to 4
+    )
+
+    var selectedLocation by remember { mutableStateOf("") }
+    var selectedSize by remember { mutableStateOf("") }
+    var recipientName by remember { mutableStateOf("") }
+
+    val selectedLocal = savedLocals.find { it["localName"].toString() == selectedLocation }
+    val localId = selectedLocal?.get("id").toString()
+    val availableCapacity = (selectedLocal?.get("capacity") as? Number)?.toInt() ?: 0
+    val requiredUnits = sizeToUnits[selectedSize] ?: 0
+    val fitsInLocation = requiredUnits <= availableCapacity
 
     LaunchedEffect(userId) {
         userId?.let { viewModel.loadSavedLocals(it) }
@@ -87,7 +82,7 @@ fun AddOrders(
                 .padding(16.dp)
                 .verticalScroll(rememberScrollState())
         ) {
-            // --- Selector de Local ---
+            // --- Location Selector ---
             Box(modifier = Modifier.fillMaxWidth()) {
                 Box(
                     modifier = Modifier
@@ -99,18 +94,18 @@ fun AddOrders(
                             MaterialTheme.shapes.medium
                         )
                         .padding(horizontal = 16.dp, vertical = 16.dp)
-                        .clickable { expandedLocals = true },
+                        .clickable { expandedLocations = true },
                     contentAlignment = Alignment.CenterStart
                 ) {
                     Text(
-                        text = if (location.isNotBlank()) location else "Seleccionar local",
-                        color = if (location.isNotBlank()) MaterialTheme.colorScheme.onBackground else Color.Gray
+                        text = if (selectedLocation.isNotBlank()) selectedLocation else "Selecciona un local",
+                        color = if (selectedLocation.isNotBlank()) MaterialTheme.colorScheme.onBackground else Color.Gray
                     )
                 }
 
                 DropdownMenu(
-                    expanded = expandedLocals,
-                    onDismissRequest = { expandedLocals = false },
+                    expanded = expandedLocations,
+                    onDismissRequest = { expandedLocations = false },
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(MaterialTheme.colorScheme.surface)
@@ -119,8 +114,8 @@ fun AddOrders(
                         DropdownMenuItem(
                             text = { Text(local["localName"].toString()) },
                             onClick = {
-                                location = local["localName"].toString()
-                                expandedLocals = false
+                                selectedLocation = local["localName"].toString()
+                                expandedLocations = false
                             },
                             modifier = Modifier.fillMaxWidth()
                         )
@@ -130,7 +125,7 @@ fun AddOrders(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // --- Selector de Tamaño ---
+            // --- Package Size Selector ---
             Box(modifier = Modifier.fillMaxWidth()) {
                 Box(
                     modifier = Modifier
@@ -146,8 +141,8 @@ fun AddOrders(
                     contentAlignment = Alignment.CenterStart
                 ) {
                     Text(
-                        text = size,
-                        color = MaterialTheme.colorScheme.onBackground
+                        text = sizeLabels[selectedSize] ?: "Dimensiones del paquete",
+                        color = if (selectedSize.isNotBlank()) MaterialTheme.colorScheme.onBackground else Color.Gray
                     )
                 }
 
@@ -158,11 +153,11 @@ fun AddOrders(
                         .fillMaxWidth()
                         .background(MaterialTheme.colorScheme.surface)
                 ) {
-                    sizes.forEach { sizeOption ->
+                    sizeOptions.forEach { sizeOption ->
                         DropdownMenuItem(
-                            text = { Text(sizeOption) },
+                            text = { Text(sizeLabels[sizeOption] ?: sizeOption) },
                             onClick = {
-                                size = sizeOption
+                                selectedSize = sizeOption
                                 expandedSizes = false
                             },
                             modifier = Modifier.fillMaxWidth()
@@ -171,12 +166,30 @@ fun AddOrders(
                 }
             }
 
+            if (selectedLocation.isNotBlank() && selectedSize.isNotBlank()) {
+                if (!fitsInLocation) {
+                    Text(
+                        text = "❌ No hay suficiente capacidad disponible en este local.",
+                        color = Color.Red,
+                        fontSize = 14.sp,
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
+                } else {
+                    Text(
+                        text = "✅ El paquete cabe en el local seleccionado.",
+                        color = Color(0xFF2E7D32),
+                        fontSize = 14.sp,
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
+                }
+            }
+
             Spacer(modifier = Modifier.height(16.dp))
 
-            // --- Nombre del Destinatario ---
+            // --- Recipient Name ---
             OutlinedTextField(
-                value = nameAddress,
-                onValueChange = { nameAddress = it },
+                value = recipientName,
+                onValueChange = { recipientName = it },
                 label = { Text("Nombre del Destinatario") },
                 modifier = Modifier.fillMaxWidth(),
                 shape = MaterialTheme.shapes.medium,
@@ -185,9 +198,25 @@ fun AddOrders(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // --- Botón Agregar ---
+            // --- Add Button ---
             Button(
-                onClick = { /* Acción */ },
+                onClick = {
+                    if (localId.isNotBlank() && recipientName.isNotBlank() && selectedSize.isNotBlank()) {
+                        viewModel.createOrder(
+                            localId = localId,
+                            senderId = userId!!,
+                            recipientName = recipientName,
+                            packageSize = selectedSize,
+                            onSuccess = { orderId ->
+                                navController.navigate("orderDetail/$orderId/qr")
+                            },
+                            onFailure = {
+                                Toast.makeText(context, "Insufficient space or error", Toast.LENGTH_SHORT).show()
+                            }
+                        )
+                    }
+                },
+                enabled = selectedLocation.isNotBlank() && selectedSize.isNotBlank() && fitsInLocation,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color(0xFF005C9A),
                     contentColor = Color.White
@@ -197,12 +226,12 @@ fun AddOrders(
                     .fillMaxWidth()
                     .height(50.dp)
             ) {
-                Text("Agregar", fontSize = 20.sp, fontWeight = FontWeight.SemiBold)
+                Text("Agregar Orden", fontSize = 20.sp, fontWeight = FontWeight.SemiBold)
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // --- Botón Cancelar ---
+            // --- Cancel Button ---
             Button(
                 onClick = { navController.popBackStack() },
                 colors = ButtonDefaults.buttonColors(
@@ -217,12 +246,5 @@ fun AddOrders(
                 Text("Cancelar", fontSize = 20.sp, fontWeight = FontWeight.SemiBold)
             }
         }
-
     }
 }
-
-
-
-
-
-

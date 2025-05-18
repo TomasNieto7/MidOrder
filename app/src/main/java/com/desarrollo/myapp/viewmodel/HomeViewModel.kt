@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.desarrollo.myapp.repository.LocalRepository
+import com.desarrollo.myapp.repository.OrdersRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -59,10 +60,26 @@ class HomeViewModel : ViewModel() {
         }
     }
 
-    fun saveLocalForUser(userId: String, localId: String, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
-        repository.saveLocalReference(userId, localId, onSuccess, onFailure)
-    }
+    private val ordersRepository = OrdersRepository()
 
+    fun createOrder(
+        localId: String,
+        senderId: String,
+        recipientName: String,
+        packageSize: String,
+        onSuccess: (String) -> Unit,
+        onFailure: () -> Unit
+    ) {
+        viewModelScope.launch {
+            val orderId = ordersRepository.createOrderAndUpdateCapacity(
+                localId = localId,
+                senderId = senderId,
+                recipientName = recipientName,
+                packageSize = packageSize
+            )
+            if (orderId != null) onSuccess(orderId) else onFailure()
+        }
+    }
 }
 
 
