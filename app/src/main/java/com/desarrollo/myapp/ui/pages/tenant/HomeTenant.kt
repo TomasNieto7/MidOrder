@@ -68,7 +68,7 @@ fun HomeTenant(navController: NavController) {
         bottomBar = { NavBarTenant(navController) },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { showBottomSheet = true },
+                onClick = { navController.navigate("scanQR") },
                 containerColor = MaterialTheme.colorScheme.primary,     // Color de fondo
                 contentColor = Color.White,             // Color del ícono
                 modifier = Modifier.size(74.dp)         // Tamaño del botón (por defecto es 56.dp)

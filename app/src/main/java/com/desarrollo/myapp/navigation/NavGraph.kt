@@ -12,13 +12,19 @@ import com.desarrollo.myapp.ui.pages.seller.OrderDetails
 import com.desarrollo.myapp.ui.pages.seller.OrdersSeller
 import com.desarrollo.myapp.ui.pages.seller.QRSeller
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 import com.desarrollo.myapp.ui.pages.tenant.HomeTenant
 import com.desarrollo.myapp.ui.pages.tenant.MyLocalsTenant
 import com.desarrollo.myapp.ui.pages.tenant.RegisterLocal
 import com.desarrollo.myapp.ui.pages.RegisterUser
 import com.desarrollo.myapp.ui.pages.seller.AddOrders
+import com.desarrollo.myapp.ui.pages.tenant.OrderDeliver
+import com.desarrollo.myapp.ui.pages.tenant.ScanQR
 import com.desarrollo.myapp.viewmodel.HomeViewModel
 import com.desarrollo.myapp.viewmodel.OrdersViewModel
+import java.net.URLDecoder
+import java.nio.charset.StandardCharsets
 
 
 @ExperimentalMaterial3Api
@@ -65,6 +71,18 @@ fun NavGraph(navController: NavHostController) {
         composable("registerUser") {
             RegisterUser(navController = navController)
         }
+        composable("scanQR") {
+            ScanQR(navController = navController)
+        }
+        composable(
+            route = "orderDeliver/{orderId}",
+            arguments = listOf(navArgument("orderId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val encodedOrderId = backStackEntry.arguments?.getString("orderId") ?: ""
+            val orderId = URLDecoder.decode(encodedOrderId, StandardCharsets.UTF_8.toString())
+            OrderDeliver(orderId = orderId, navController = navController)
+        }
+
     }
 }
 
