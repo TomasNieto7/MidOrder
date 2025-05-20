@@ -31,6 +31,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Plus
+import com.desarrollo.myapp.repository.LoginRepository
 import com.desarrollo.myapp.ui.components.CardLocation
 import com.desarrollo.myapp.ui.components.MidOrderTopBar
 import com.desarrollo.myapp.ui.components.NavBar
@@ -52,13 +53,24 @@ fun HomeSeller(
 
     val context = LocalContext.current
     val userId = getUserId(context)
+    val loginRepository = LoginRepository()
 
     LaunchedEffect(userId) {
         userId?.let { viewModel.loadSavedLocals(it) }
     }
 
     Scaffold(
-        topBar = { MidOrderTopBar() },
+        topBar = {
+            MidOrderTopBar(
+                onMiCuentaClick = { /* navegar a la pantalla de mi cuenta */ },
+                onCerrarSesionClick = {
+                    loginRepository.logout(context)
+                    navController.navigate("login") {
+                        popUpTo(0)
+                    }
+                }
+            )
+        },
         bottomBar = { NavBar(navController) },
         floatingActionButton = {
             FloatingActionButton(
@@ -96,7 +108,8 @@ fun HomeSeller(
                     val localId = local["id"]?.toString() ?: return@items
                     val isSaved = savedLocalIds.contains(localId)
                     val capacityValue = (local["capacity"] as? Number)?.toInt() ?: 0
-                    val bookedUnits = (local["bookedUnits"] as? Number)?.toInt() ?: 0  // si tienes esta info, sino pon 0
+                    val bookedUnits = (local["bookedUnits"] as? Number)?.toInt()
+                        ?: 0  // si tienes esta info, sino pon 0
 
                     val capacidadDisponible = capacityValue - bookedUnits
                     CardLocation(

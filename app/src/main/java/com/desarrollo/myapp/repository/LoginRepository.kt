@@ -1,5 +1,6 @@
 package com.desarrollo.myapp.repository
 
+import android.content.Context
 import com.desarrollo.myapp.model.UserSession
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -23,4 +24,14 @@ class LoginRepository {
             null
         }
     }
+
+    fun logout(context: Context) {
+        FirebaseAuth.getInstance().signOut()
+        val sharedPref = context.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
+        with(sharedPref.edit()) {
+            remove("userId")
+            apply()
+        }
+    }
+
 }

@@ -35,6 +35,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.ScanQrCode
+import com.desarrollo.myapp.repository.LoginRepository
 import com.desarrollo.myapp.ui.components.MidOrderTopBar
 import com.desarrollo.myapp.ui.components.NavBarTenant
 import com.desarrollo.myapp.ui.components.OrderBottomSheet
@@ -54,7 +55,7 @@ fun HomeTenant(navController: NavController) {
     val viewModel: HomeTenantViewModel = viewModel()
     val hasLocals by viewModel.hasLocals
     val hasOrders by viewModel.hasOrders
-
+    val loginRepository = LoginRepository()
 
     LaunchedEffect(userId) {
         userId?.let {
@@ -64,7 +65,17 @@ fun HomeTenant(navController: NavController) {
     }
 
     Scaffold(
-        topBar = { MidOrderTopBar() },
+        topBar = {
+            MidOrderTopBar(
+                onMiCuentaClick = { /* navegar a la pantalla de mi cuenta */ },
+                onCerrarSesionClick = {
+                    loginRepository.logout(context)
+                    navController.navigate("login") {
+                        popUpTo(0)
+                    }
+                }
+            )
+        },
         bottomBar = { NavBarTenant(navController) },
         floatingActionButton = {
             FloatingActionButton(
