@@ -1,7 +1,5 @@
 package com.desarrollo.myapp.ui.pages.seller
 
-import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -35,8 +33,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.composables.icons.lucide.Boxes
 import com.composables.icons.lucide.Lucide
-import com.desarrollo.myapp.ui.components.MidOrderTopBar
 import com.desarrollo.myapp.ui.components.NavBar
+import com.desarrollo.myapp.ui.components.OrderTopBarBack
 import com.desarrollo.myapp.viewmodel.OrdersViewModel
 
 
@@ -53,7 +51,7 @@ fun OrderDetails(
     }
 
     Scaffold(
-        topBar = { MidOrderTopBar() },
+        topBar = { OrderTopBarBack(navController = navController) },
         bottomBar = { NavBar(navController) }
     ) { padding ->
         Box(
@@ -135,7 +133,7 @@ fun OrderDetails(
 
                 Button(
                     onClick = {
-                        // Acción para "QR"
+                        navController.navigate("orderDetail/${orderId}/qr")
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.primary,

@@ -1,5 +1,9 @@
 package com.desarrollo.myapp.ui.pages.seller
 
+import android.content.Context
+import android.content.Intent
+import android.graphics.Bitmap
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
@@ -22,19 +26,25 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.FileProvider
 import androidx.navigation.NavController
 import com.desarrollo.myapp.repository.QRRepository
 import com.desarrollo.myapp.ui.components.NavBar
 import com.desarrollo.myapp.ui.components.OrderTopBarBack
+import java.io.File
+import java.io.FileOutputStream
 
 @Composable
 fun QRSeller(orderId: String, navController: NavController) {
+    val context = LocalContext.current
     val qrRepo = remember { QRRepository() }
-    val qrBitmap = remember(orderId) { qrRepo.generateQRCodeBitmap(orderId.toString()) }
+    val qrBitmap = remember(orderId) { qrRepo.generateQRCodeBitmap(orderId) }
+
     Scaffold(
         topBar = { OrderTopBarBack(navController = navController) },
         bottomBar = { NavBar(navController) }
@@ -43,7 +53,7 @@ fun QRSeller(orderId: String, navController: NavController) {
             modifier = Modifier
                 .padding(padding)
                 .fillMaxSize()
-                .padding(horizontal = 16.dp)
+                .padding(horizontal = 32.dp, vertical = 16.dp)
         ) {
             Text(
                 text = "Recoge tu paquete",
@@ -60,7 +70,7 @@ fun QRSeller(orderId: String, navController: NavController) {
                 text = "Muestra este código QR al personal del lugar para poder recoger tu paquete.",
                 style = MaterialTheme.typography.bodyMedium,
                 fontSize = 16.sp,
-                textAlign = TextAlign.Justify,
+                textAlign = TextAlign.Center,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 16.dp)
@@ -81,11 +91,12 @@ fun QRSeller(orderId: String, navController: NavController) {
             Spacer(modifier = Modifier.weight(1f))
 
             Button(
-                onClick = { navController.popBackStack() },
+                onClick = { shareImage(qrBitmap, context) }, // Aquí el share directo
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                     contentColor = Color.White
                 ),
+                shape = MaterialTheme.shapes.medium,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp)
@@ -95,3 +106,34 @@ fun QRSeller(orderId: String, navController: NavController) {
         }
     }
 }
+
+fun shareImage(bitmap: Bitmap, context: Context) {
+    try {
+        val cachePath = File(context.cacheDir, "images")
+        cachePath.mkdirs()
+        val file = File(cachePath, "qr_image.png")
+        FileOutputStream(file).use {
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
+        }
+
+        val contentUri: Uri = FileProvider.getUriForFile(
+            context,
+            "${context.packageName}.provider",
+            file
+        )
+
+        val shareIntent = Intent(Intent.ACTION_SEND).apply {
+            type = "image/png"
+            putExtra(Intent.EXTRA_STREAM, contentUri)
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }
+
+        context.startActivity(Intent.createChooser(shareIntent, "Compartir QR"))
+    } catch (e: Exception) {
+        e.printStackTrace()
+        // Aquí puedes mostrar un Toast si quieres
+    }
+}
+
+
+
