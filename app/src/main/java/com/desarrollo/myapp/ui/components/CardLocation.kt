@@ -347,22 +347,22 @@ fun CardLocationTenant(
                     }
 
                     // FAB arriba a la izquierda - al final del Box para que esté visible encima
-                    FloatingActionButton(
-                        onClick = { showBottomSheet = true },
-                        modifier = Modifier
-                            .align(Alignment.TopEnd)
-                            .padding(12.dp)
-                            .size(70.dp),
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        contentColor = Color.White,
-                        elevation = FloatingActionButtonDefaults.elevation(6.dp)
-                    ) {
-                        Icon(
-                            imageVector = Lucide.Pencil,
-                            contentDescription = "Edit",
-                            modifier = Modifier.size(20.dp)
-                        )
-                    }
+//                    FloatingActionButton(
+//                        onClick = { showBottomSheet = true },
+//                        modifier = Modifier
+//                            .align(Alignment.TopEnd)
+//                            .padding(12.dp)
+//                            .size(70.dp),
+//                        containerColor = MaterialTheme.colorScheme.primary,
+//                        contentColor = Color.White,
+//                        elevation = FloatingActionButtonDefaults.elevation(6.dp)
+//                    ) {
+//                        Icon(
+//                            imageVector = Lucide.Pencil,
+//                            contentDescription = "Edit",
+//                            modifier = Modifier.size(20.dp)
+//                        )
+//                    }
                 }
             }
 

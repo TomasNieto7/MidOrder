@@ -3,6 +3,7 @@ package com.desarrollo.myapp.ui.pages.tenant
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -23,13 +24,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.desarrollo.myapp.ui.components.NavBar
+import com.desarrollo.myapp.repository.LoginRepository
 import com.desarrollo.myapp.ui.components.NavBarTenant
 import com.desarrollo.myapp.ui.components.OrderTopBarBack
 import com.desarrollo.myapp.viewmodel.OrdersViewModel
@@ -43,6 +45,8 @@ fun OrderDeliver(
 ) {
     val selectedOrder by ordersViewModel.selectedOrder.collectAsState()
     var isLoading by remember { mutableStateOf(true) }
+    val loginRepository = LoginRepository()
+    val context = LocalContext.current
 
     LaunchedEffect(orderId) {
         isLoading = true
@@ -51,7 +55,16 @@ fun OrderDeliver(
     }
 
     Scaffold(
-        topBar = { OrderTopBarBack(navController = navController) },
+        topBar = {
+            OrderTopBarBack(navController = navController,
+                onMiCuentaClick = { /* navegar a la pantalla de mi cuenta */ },
+                onCerrarSesionClick = {
+                    loginRepository.logout(context)
+                    navController.navigate("login") {
+                        popUpTo(0)
+                    }
+                })
+        },
         bottomBar = { NavBarTenant(navController) }
     ) { padding ->
         Box(
@@ -88,6 +101,7 @@ fun OrderDeliver(
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp)
                     )
+                    Spacer(modifier = Modifier.height(32.dp))
                     Button(
                         onClick = {
                             ordersViewModel.markOrderAsDelivered(orderId) { success ->

@@ -136,17 +136,42 @@ class OrdersRepository {
 
     suspend fun markOrderAsDelivered(orderRef: String): Boolean {
         return try {
-            Firebase.firestore
+            val orderDoc = Firebase.firestore
                 .collection("orders")
                 .document(orderRef)
-                .update("delivered", Date())
+                .get()
                 .await()
+
+            val size = orderDoc.getString("size") ?: return false
+            val localId = orderDoc.getString("local") ?: return false
+
+            // Mismo mapa de unidades usadas por tamaño
+            val sizeToUnits = mapOf(
+                "15x15" to 1,
+                "25x15" to 2,
+                "35x25" to 3,
+                "45x35" to 4,
+                "60x40" to 5
+            )
+            val unitsToAdd = sizeToUnits[size] ?: return false
+
+            val localRef = Firebase.firestore.collection("locals").document(localId)
+
+            // Obtener capacidad actual
+            val localSnapshot = localRef.get().await()
+            val currentCapacity = localSnapshot.getDouble("capacity") ?: return false
+
+            // Sumar capacidad y actualizar orden
+            localRef.update("capacity", currentCapacity + unitsToAdd).await()
+            orderDoc.reference.update("delivered", Date()).await()
+
             true
         } catch (e: Exception) {
             Log.e("OrdersRepository", "Error marcando orden como entregada", e)
             false
         }
     }
+
 
 
 }

@@ -48,6 +48,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Upload
 import com.desarrollo.myapp.repository.LocalRepository
+import com.desarrollo.myapp.repository.LoginRepository
 import com.desarrollo.myapp.ui.components.NavBarTenant
 import com.desarrollo.myapp.ui.components.OrderTopBarBack
 
@@ -71,9 +72,19 @@ fun RegisterLocal(navController: NavController) {
         }
     }
 
+    val loginRepository = LoginRepository()
 
     Scaffold(
-        topBar = { OrderTopBarBack(navController = navController) },
+        topBar = {
+            OrderTopBarBack(navController = navController,
+                onMiCuentaClick = { /* navegar a la pantalla de mi cuenta */ },
+                onCerrarSesionClick = {
+                    loginRepository.logout(context)
+                    navController.navigate("login") {
+                        popUpTo(0)
+                    }
+                })
+        },
         bottomBar = { NavBarTenant(navController) }
     ) { padding ->
         Column(

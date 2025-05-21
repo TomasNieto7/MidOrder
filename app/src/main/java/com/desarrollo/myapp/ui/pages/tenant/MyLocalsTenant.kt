@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.desarrollo.myapp.repository.LocalRepository
+import com.desarrollo.myapp.repository.LoginRepository
 import com.desarrollo.myapp.ui.components.CardLocationTenant
 import com.desarrollo.myapp.ui.components.MidOrderTopBar
 import com.desarrollo.myapp.ui.components.NavBarTenant
@@ -65,6 +66,7 @@ fun MyLocalsTenant(navController: NavController) {
 
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
+    val loginRepository = LoginRepository()
 
     fun showSnackbar(message: String) {
         coroutineScope.launch {
@@ -86,7 +88,17 @@ fun MyLocalsTenant(navController: NavController) {
     }
 
     Scaffold(
-        topBar = { MidOrderTopBar() },
+        topBar = {
+            MidOrderTopBar(
+                onMiCuentaClick = { /* navegar a la pantalla de mi cuenta */ },
+                onCerrarSesionClick = {
+                    loginRepository.logout(context)
+                    navController.navigate("login") {
+                        popUpTo(0)
+                    }
+                }
+            )
+        },
         bottomBar = { NavBarTenant(navController) },
         floatingActionButton = {
             FloatingActionButton(
