@@ -13,13 +13,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
-import androidx.compose.material.OutlinedButton
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,13 +26,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-
 import com.desarrollo.myapp.ui.components.InputLogin
-import com.desarrollo.myapp.ui.components.Logo
 import kotlinx.coroutines.launch
+import androidx.compose.material3.OutlinedButton
 
 
 @Composable
@@ -61,7 +59,11 @@ fun RegisterUser(navController: NavController) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
-        Text("Crear Cuenta")
+        Text(
+            text = "Crear Cuenta",
+            style = MaterialTheme.typography.headlineLarge,
+            color = MaterialTheme.colorScheme.onSurface
+        )
         Spacer(modifier = Modifier.height(20.dp))
 
         Column(modifier = Modifier.fillMaxWidth()) {
@@ -72,14 +74,27 @@ fun RegisterUser(navController: NavController) {
             Column {
                 OutlinedButton(
                     onClick = { expanded = true },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp),
+                    shape = MaterialTheme.shapes.medium,
+                    border = ButtonDefaults.outlinedButtonBorder,
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        contentColor = MaterialTheme.colorScheme.onSurface
+                    )
                 ) {
-                    Text(selectedRol)
+                    Text(
+                        text = selectedRol,
+                        style = MaterialTheme.typography.bodyLarge
+                    )
                 }
 
                 DropdownMenu(
                     expanded = expanded,
-                    onDismissRequest = { expanded = false }
+                    onDismissRequest = { expanded = false },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp)
                 ) {
                     roles.forEach { rol ->
                         DropdownMenuItem(
@@ -88,7 +103,11 @@ fun RegisterUser(navController: NavController) {
                                 expanded = false
                             }
                         ) {
-                            Text(rol)
+                            Text(
+                                text = rol,
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
                         }
                     }
                 }
@@ -158,6 +177,28 @@ fun RegisterUser(navController: NavController) {
                 )
             ) {
                 Text("Registrar", fontSize = 20.sp)
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = "¿Ya estás registrado?",
+                    fontSize = 18.sp,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Spacer(modifier = Modifier.height(1.dp))
+                Text(
+                    text = "Inicia Sesión",
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 20.sp,
+                    modifier = Modifier.clickable {
+                        navController.navigate("login")
+                    }
+                )
             }
         }
     }
