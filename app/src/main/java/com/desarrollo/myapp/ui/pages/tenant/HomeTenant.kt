@@ -3,17 +3,36 @@ package com.desarrollo.myapp.ui.pages.tenant
 import android.content.Context
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -22,9 +41,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.composables.icons.lucide.Boxes
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.ScanQrCode
-import com.composables.icons.lucide.Boxes
 import com.desarrollo.myapp.repository.LoginRepository
 import com.desarrollo.myapp.ui.components.MidOrderTopBar
 import com.desarrollo.myapp.ui.components.NavBarTenant
@@ -94,8 +113,6 @@ fun HomeTenant(navController: NavController) {
                             Column {
                                 orders.forEach { order ->
                                     OrderCard(order = order, onClick = {
-                                        // Navegar a detalle de la orden, ejemplo:
-                                        navController.navigate("orderDetail/${order["orderId"]}")
                                     })
                                     Spacer(modifier = Modifier.height(8.dp))
                                 }
@@ -186,7 +203,15 @@ fun getUserId2(context: Context): String? {
 @Composable
 fun OrderCard(order: Map<String, Any>, onClick: () -> Unit) {
     val orderId = order["orderId"]?.toString() ?: ""
-    val localName = order["localName"]?.toString() ?: "Desconocido"
+    // Obtener el campo 'delivered' como un objeto Any? (puede ser null)
+    val delivered = order["delivered"]
+
+    // Condición para mostrar texto según valor de 'delivered'
+    val status = if (delivered == null) {
+        "En entrega"
+    } else {
+        "Entregado"
+    }
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -208,7 +233,7 @@ fun OrderCard(order: Map<String, Any>, onClick: () -> Unit) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Column {
                     Text("Orden  #$orderId", style = MaterialTheme.typography.bodyLarge)
-                    Text(localName, style = MaterialTheme.typography.bodySmall, color = Color.Gray)
+                    Text(status, style = MaterialTheme.typography.bodySmall, color = Color.Gray)
                 }
             }
             Icon(

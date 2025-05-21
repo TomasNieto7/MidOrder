@@ -59,7 +59,7 @@ class OrdersRepository {
                 "location" to "/locals/$localId",
                 "sent" to Date(),
                 "localArrived" to Date(),
-                "delivered" to Date()
+                "delivered" to null
             )
 
             db.collection("orders").add(newOrder).await()
@@ -133,6 +133,22 @@ class OrdersRepository {
             null
         }
     }
+
+    suspend fun markOrderAsDelivered(orderRef: String): Boolean {
+        return try {
+            Firebase.firestore
+                .collection("orders")
+                .document(orderRef)
+                .update("delivered", Date())
+                .await()
+            true
+        } catch (e: Exception) {
+            Log.e("OrdersRepository", "Error marcando orden como entregada", e)
+            false
+        }
+    }
+
+
 }
 
 fun generateUserFriendlyId(length: Int = 8): String {
