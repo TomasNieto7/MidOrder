@@ -37,6 +37,7 @@ import com.composables.icons.lucide.Boxes
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Plus
 import com.composables.icons.lucide.Timer
+import com.desarrollo.myapp.repository.LoginRepository
 import com.desarrollo.myapp.ui.components.MidOrderTopBar
 import com.desarrollo.myapp.ui.components.NavBar
 import com.desarrollo.myapp.ui.components.SearchBarInput
@@ -52,6 +53,7 @@ fun OrdersSeller(
     val orders by viewModel.orders.collectAsState()
     val context = LocalContext.current
     val userId = getUserId(context)
+    val loginRepository = LoginRepository()
 
     LaunchedEffect(userId) {
         userId?.let {
@@ -60,7 +62,17 @@ fun OrdersSeller(
     }
 
     Scaffold(
-        topBar = { MidOrderTopBar() },
+        topBar = {
+            MidOrderTopBar(
+                onMiCuentaClick = { /* navegar a la pantalla de mi cuenta */ },
+                onCerrarSesionClick = {
+                    loginRepository.logout(context)
+                    navController.navigate("login") {
+                        popUpTo(0)
+                    }
+                }
+            )
+        },
         bottomBar = { NavBar(navController) },
         floatingActionButton = {
             FloatingActionButton(
@@ -85,7 +97,18 @@ fun OrdersSeller(
         ) {
             SearchBarInput()
             if (orders.isEmpty()) {
-                Text("No tienes órdenes.")
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally
+                ) {
+                    androidx.compose.material3.Text(
+                        text = "Aún no tienes locales guardados.",
+                        style = MaterialTheme.typography.titleMedium,
+                        color = Color.Gray
+                    )
+                }
             } else {
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -93,7 +116,9 @@ fun OrdersSeller(
                 ) {
                     items(orders.size) { i ->
                         val order = orders[i]
-                        OrderCard(order = order, onClick = { navController.navigate("orderDetail/${order["id"]}") })
+                        OrderCard(
+                            order = order,
+                            onClick = { navController.navigate("orderDetail/${order["id"]}") })
                     }
                 }
             }
@@ -113,7 +138,10 @@ fun OrderCard(order: Map<String, Any>, onClick: () -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onClick() },
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background, contentColor = MaterialTheme.colorScheme.onSurface),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.background,
+            contentColor = MaterialTheme.colorScheme.onSurface
+        ),
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
     ) {
         Row(

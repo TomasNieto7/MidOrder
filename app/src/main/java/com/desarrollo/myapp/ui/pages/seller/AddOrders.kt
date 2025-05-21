@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.desarrollo.myapp.repository.LoginRepository
 import com.desarrollo.myapp.ui.components.NavBar
 import com.desarrollo.myapp.ui.components.OrderTopBarBack
 import com.desarrollo.myapp.ui.pages.tenant.getUserId2
@@ -66,13 +67,23 @@ fun AddOrders(
     val availableCapacity = (selectedLocal?.get("capacity") as? Number)?.toInt() ?: 0
     val requiredUnits = sizeToUnits[selectedSize] ?: 0
     val fitsInLocation = requiredUnits <= availableCapacity
+    val loginRepository = LoginRepository()
 
     LaunchedEffect(userId) {
         userId?.let { viewModel.loadSavedLocals(it) }
     }
 
     Scaffold(
-        topBar = { OrderTopBarBack(navController = navController) },
+        topBar = {
+            OrderTopBarBack(navController = navController,
+                onMiCuentaClick = { /* navegar a la pantalla de mi cuenta */ },
+                onCerrarSesionClick = {
+                    loginRepository.logout(context)
+                    navController.navigate("login") {
+                        popUpTo(0)
+                    }
+                })
+        },
         bottomBar = { NavBar(navController) }
     ) { padding ->
         Column(
@@ -211,7 +222,11 @@ fun AddOrders(
                                 navController.navigate("orderDetail/$orderId/qr")
                             },
                             onFailure = {
-                                Toast.makeText(context, "Insufficient space or error", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(
+                                    context,
+                                    "Insufficient space or error",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }
                         )
                     }

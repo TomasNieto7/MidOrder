@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.FileProvider
 import androidx.navigation.NavController
+import com.desarrollo.myapp.repository.LoginRepository
 import com.desarrollo.myapp.repository.QRRepository
 import com.desarrollo.myapp.ui.components.NavBar
 import com.desarrollo.myapp.ui.components.OrderTopBarBack
@@ -44,9 +45,19 @@ fun QRSeller(orderId: String, navController: NavController) {
     val context = LocalContext.current
     val qrRepo = remember { QRRepository() }
     val qrBitmap = remember(orderId) { qrRepo.generateQRCodeBitmap(orderId) }
+    val loginRepository = LoginRepository()
 
     Scaffold(
-        topBar = { OrderTopBarBack(navController = navController) },
+        topBar = {
+            OrderTopBarBack(navController = navController,
+                onMiCuentaClick = { /* navegar a la pantalla de mi cuenta */ },
+                onCerrarSesionClick = {
+                    loginRepository.logout(context)
+                    navController.navigate("login") {
+                        popUpTo(0)
+                    }
+                })
+        },
         bottomBar = { NavBar(navController) }
     ) { padding ->
         Column(

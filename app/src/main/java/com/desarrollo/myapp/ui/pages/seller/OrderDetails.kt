@@ -26,6 +26,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -33,6 +34,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.composables.icons.lucide.Boxes
 import com.composables.icons.lucide.Lucide
+import com.desarrollo.myapp.repository.LoginRepository
 import com.desarrollo.myapp.ui.components.NavBar
 import com.desarrollo.myapp.ui.components.OrderTopBarBack
 import com.desarrollo.myapp.viewmodel.OrdersViewModel
@@ -45,13 +47,24 @@ fun OrderDetails(
     viewModel: OrdersViewModel = viewModel()
 ) {
     val order by viewModel.selectedOrder.collectAsState()
+    val loginRepository = LoginRepository()
+    val context = LocalContext.current
 
     LaunchedEffect(orderId) {
         viewModel.loadOrderByRef(orderId)
     }
 
     Scaffold(
-        topBar = { OrderTopBarBack(navController = navController) },
+        topBar = {
+            OrderTopBarBack(navController = navController,
+                onMiCuentaClick = { /* navegar a la pantalla de mi cuenta */ },
+                onCerrarSesionClick = {
+                    loginRepository.logout(context)
+                    navController.navigate("login") {
+                        popUpTo(0)
+                    }
+                })
+        },
         bottomBar = { NavBar(navController) }
     ) { padding ->
         Box(

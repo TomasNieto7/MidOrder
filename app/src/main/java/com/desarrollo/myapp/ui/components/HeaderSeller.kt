@@ -112,7 +112,14 @@ fun MidOrderTopBar(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun OrderTopBarBack(navController: NavController) {
+fun OrderTopBarBack(
+    navController: NavController,
+    onMiCuentaClick: () -> Unit = {},
+    onCerrarSesionClick: () -> Unit = {}
+) {
+
+    var expanded by remember { mutableStateOf(false) }
+
     TopAppBar(
         title = { Text("MidOrder") },
         navigationIcon = {
@@ -126,12 +133,66 @@ fun OrderTopBarBack(navController: NavController) {
             }
         },
         actions = {
-            IconButton(onClick = { /* Acción de notificación */ }) {
-                Icon(Lucide.Bell, contentDescription = "Notificaciones")
-            }
-            IconButton(onClick = { /* Acción de usuario */ }) {
+            IconButton(onClick = { expanded = true }) {
                 Icon(Lucide.User, contentDescription = "Perfil")
             }
+
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false },
+                modifier = Modifier
+                    .background(
+                        color = MaterialTheme.colorScheme.background,
+                        shape = RoundedCornerShape(12.dp)
+                    )
+            ) {
+                // ITEM: Mi cuenta
+                DropdownMenuItem(
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Lucide.UserRound,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(20.dp)
+                        )
+                    },
+                    text = {
+                        Text(
+                            text = "Mi cuenta",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    },
+                    onClick = {
+                        expanded = false
+                        onMiCuentaClick()
+                    }
+                )
+
+                // ITEM: Cerrar sesión
+                DropdownMenuItem(
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Lucide.LogOut,
+                            contentDescription = null,
+                            tint = Color(0xFF974545),
+                            modifier = Modifier.size(20.dp)
+                        )
+                    },
+                    text = {
+                        Text(
+                            text = "Cerrar sesión",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = Color(0xFF974545)
+                        )
+                    },
+                    onClick = {
+                        expanded = false
+                        onCerrarSesionClick()
+                    }
+                )
+            }
+
         },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primary,         // Color de fondo
