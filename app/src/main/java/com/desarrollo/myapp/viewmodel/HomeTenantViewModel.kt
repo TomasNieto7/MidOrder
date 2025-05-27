@@ -33,10 +33,18 @@ class HomeTenantViewModel : ViewModel() {
                 _locals.value = locals
 
                 if (locals.isNotEmpty()) {
-                    val localId = locals.first()["id"] as? String
-                    localId?.let {
-                        loadOrdersForLocal(it)
+                    // Obtener los IDs de todos los locales
+                    val localIds = locals.mapNotNull { it["id"] as? String }
+
+                    // Cargar todas las órdenes de todos los locales
+                    val allOrders = mutableListOf<Map<String, Any>>()
+                    for (localId in localIds) {
+                        val ordersForLocal = ordersRepository.getOrdersByLocal(localId)
+                        allOrders.addAll(ordersForLocal.map { it + ("localId" to localId) })
                     }
+
+                    _orders.value = allOrders
+                    _hasOrders.value = allOrders.isNotEmpty()
                 } else {
                     _hasOrders.value = false
                     _orders.value = emptyList()
@@ -50,7 +58,7 @@ class HomeTenantViewModel : ViewModel() {
             }
         }
     }
-
+    
     private fun loadOrdersForLocal(localID: String) {
         viewModelScope.launch {
             try {
