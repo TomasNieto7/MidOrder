@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.composables.icons.lucide.Boxes
+import com.composables.icons.lucide.CircleCheck
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Plus
 import com.composables.icons.lucide.Timer
@@ -104,7 +105,7 @@ fun OrdersSeller(
                     horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally
                 ) {
                     androidx.compose.material3.Text(
-                        text = "Aún no tienes locales guardados.",
+                        text = "Aún no tienes envios.",
                         style = MaterialTheme.typography.titleMedium,
                         color = Color.Gray
                     )
@@ -134,6 +135,7 @@ fun OrdersSeller(
 fun OrderCard(order: Map<String, Any>, onClick: () -> Unit) {
     val orderId = order["orderId"]?.toString() ?: ""
     val localName = order["localName"]?.toString() ?: "Desconocido"
+    val devilered = order["delivered"]?.toString() ?: null
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -152,12 +154,21 @@ fun OrderCard(order: Map<String, Any>, onClick: () -> Unit) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-//                Icon(
-//                    Lucide.Timer,
-//                    contentDescription = "Tiempo restante",
-//                    tint = Color(0xFF974545),
-//                    modifier = Modifier.size(40.dp))
-//                Spacer(Modifier.width(8.dp))
+                if (devilered==null){
+                    Icon(
+                        Lucide.Timer,
+                        contentDescription = "Tiempo restante",
+                        tint = Color.Gray,
+                        modifier = Modifier.size(40.dp))
+                    Spacer(Modifier.width(8.dp))
+                } else {
+                    Icon(
+                        Lucide.CircleCheck,
+                        contentDescription = "Tiempo restante",
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(40.dp))
+                    Spacer(Modifier.width(8.dp))
+                }
                 Column {
                     Text("Orden  #$orderId", style = MaterialTheme.typography.bodyLarge)
                     Text(localName, style = MaterialTheme.typography.bodySmall, color = Color.Gray)

@@ -20,6 +20,7 @@ import com.desarrollo.myapp.ui.pages.tenant.RegisterLocal
 import com.desarrollo.myapp.ui.pages.RegisterUser
 import com.desarrollo.myapp.ui.pages.seller.AddOrders
 import com.desarrollo.myapp.ui.pages.tenant.OrderDeliver
+import com.desarrollo.myapp.ui.pages.tenant.OrderDetailsTenant
 import com.desarrollo.myapp.ui.pages.tenant.ScanQR
 import com.desarrollo.myapp.viewmodel.HomeViewModel
 import com.desarrollo.myapp.viewmodel.OrdersViewModel
@@ -81,6 +82,11 @@ fun NavGraph(navController: NavHostController) {
             val encodedOrderId = backStackEntry.arguments?.getString("orderId") ?: ""
             val orderId = URLDecoder.decode(encodedOrderId, StandardCharsets.UTF_8.toString())
             OrderDeliver(orderId = orderId, navController = navController)
+        }
+
+        composable("orderDetailTenant/{orderId}") { backStackEntry ->
+            val orderId = backStackEntry.arguments?.getString("orderId") ?: ""
+            OrderDetailsTenant(navController = navController, orderId = orderId)
         }
 
     }

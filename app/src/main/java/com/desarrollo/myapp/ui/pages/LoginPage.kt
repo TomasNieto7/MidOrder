@@ -62,7 +62,7 @@ fun LoginPage(navController: NavController) {
                             val result = loginRepository.login(email, password)
 
                             if (result != null) {
-                                saveUserId(context, result.userId)
+                                saveUserId(context, result.userId, result.username)
                                 when (result.role.lowercase()) {
                                     "vendedor" -> navController.navigate("homeSeller")
                                     "locatario" -> navController.navigate("homeTenant")
@@ -131,10 +131,11 @@ fun Inputs(emailState: MutableState<String>, passwordState: MutableState<String>
     }
 }
 
-fun saveUserId(context: Context, userId: String) {
+fun saveUserId(context: Context, userId: String, userName: String) {
     val sharedPref = context.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
     with(sharedPref.edit()) {
         putString("userId", userId)
+        putString("userName", userName)
         apply()
     }
 }

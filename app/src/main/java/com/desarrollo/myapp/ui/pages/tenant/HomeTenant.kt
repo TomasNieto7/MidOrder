@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -43,8 +44,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.composables.icons.lucide.Boxes
+import com.composables.icons.lucide.CircleCheck
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.ScanQrCode
+import com.composables.icons.lucide.Timer
 import com.desarrollo.myapp.repository.LoginRepository
 import com.desarrollo.myapp.ui.components.MidOrderTopBar
 import com.desarrollo.myapp.ui.components.NavBarTenant
@@ -68,9 +71,7 @@ fun HomeTenant(navController: NavController) {
 
     val searchQuery by viewModel.searchQuery
     val filteredOrders by viewModel.filteredOrders
-    Log.d("orders", "${hasLocals}")
-
-
+    Log.d("filtered", "${filteredOrders}")
     LaunchedEffect(userId) {
         userId?.let {
             viewModel.checkIfUserHasLocals(it)
@@ -121,8 +122,10 @@ fun HomeTenant(navController: NavController) {
                         true -> {
                             Column {
                                 filteredOrders.forEach { order ->
-                                    OrderCard(order = order, onClick = {
-                                    })
+                                    OrderCard(
+                                        order = order,
+                                        onClick = { navController.navigate("orderDetailTenant/${order["id"]}") }
+                                    )
                                     Spacer(modifier = Modifier.height(8.dp))
                                 }
                             }
@@ -207,20 +210,13 @@ fun getUserId2(context: Context): String? {
     return sharedPref.getString("userId", null)
 }
 
-
 // Tarjeta de Orden con función onClick
 @Composable
 fun OrderCard(order: Map<String, Any>, onClick: () -> Unit) {
     val orderId = order["orderId"]?.toString() ?: ""
-    // Obtener el campo 'delivered' como un objeto Any? (puede ser null)
     val delivered = order["delivered"]
+    val localName = order["localName"]?.toString() ?: "Desconocido"
 
-    // Condición para mostrar texto según valor de 'delivered'
-    val status = if (delivered == null) {
-        "En entrega"
-    } else {
-        "Entregado"
-    }
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -240,9 +236,24 @@ fun OrderCard(order: Map<String, Any>, onClick: () -> Unit) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
+                if (delivered==null){
+                    Icon(
+                        Lucide.Timer,
+                        contentDescription = "Tiempo restante",
+                        tint = Color.Gray,
+                        modifier = Modifier.size(40.dp))
+                    Spacer(Modifier.width(8.dp))
+                } else {
+                    Icon(
+                        Lucide.CircleCheck,
+                        contentDescription = "Tiempo restante",
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(40.dp))
+                    Spacer(Modifier.width(8.dp))
+                }
                 Column {
                     Text("Orden  #$orderId", style = MaterialTheme.typography.bodyLarge)
-                    Text(status, style = MaterialTheme.typography.bodySmall, color = Color.Gray)
+                    Text(localName, style = MaterialTheme.typography.bodySmall, color = Color.Gray)
                 }
             }
             Icon(

@@ -104,7 +104,8 @@ fun OrderDeliver(
                     Spacer(modifier = Modifier.height(32.dp))
                     Button(
                         onClick = {
-                            ordersViewModel.markOrderAsDelivered(orderId) { success ->
+                            val deliverPerson = loginRepository.getUserName(context) ?: "Desconocido"
+                            ordersViewModel.markOrderAsDelivered(orderId, deliverPerson) { success ->
                                 if (success) {
                                     navController.navigate("homeTenant")
                                 }

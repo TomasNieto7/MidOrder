@@ -19,7 +19,9 @@ class OrdersRepository {
                 .await()
 
             result.map { document ->
-                document.data
+                val data = document.data.toMutableMap()
+                data["id"] = document.id
+                data
             }
         } catch (e: Exception) {
             Log.e("OrdersRepository", "Error fetching locals by owner", e)
@@ -134,7 +136,7 @@ class OrdersRepository {
         }
     }
 
-    suspend fun markOrderAsDelivered(orderRef: String): Boolean {
+    suspend fun markOrderAsDelivered(orderRef: String, deliverPerson: String): Boolean {
         return try {
             val orderDoc = Firebase.firestore
                 .collection("orders")
@@ -164,6 +166,7 @@ class OrdersRepository {
             // Sumar capacidad y actualizar orden
             localRef.update("capacity", currentCapacity + unitsToAdd).await()
             orderDoc.reference.update("delivered", Date()).await()
+            orderDoc.reference.update("deliverPerson", deliverPerson).await()
 
             true
         } catch (e: Exception) {

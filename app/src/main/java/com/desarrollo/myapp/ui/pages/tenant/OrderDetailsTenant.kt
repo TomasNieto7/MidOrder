@@ -1,4 +1,4 @@
-package com.desarrollo.myapp.ui.pages.seller
+package com.desarrollo.myapp.ui.pages.tenant
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -36,12 +36,13 @@ import com.composables.icons.lucide.Boxes
 import com.composables.icons.lucide.Lucide
 import com.desarrollo.myapp.repository.LoginRepository
 import com.desarrollo.myapp.ui.components.NavBar
+import com.desarrollo.myapp.ui.components.NavBarTenant
 import com.desarrollo.myapp.ui.components.OrderTopBarBack
 import com.desarrollo.myapp.viewmodel.OrdersViewModel
 
 
 @Composable
-fun OrderDetails(
+fun OrderDetailsTenant(
     navController: NavController,
     orderId: String,
     viewModel: OrdersViewModel = viewModel()
@@ -74,7 +75,7 @@ fun OrderDetails(
                     }
                 })
         },
-        bottomBar = { NavBar(navController) }
+        bottomBar = { NavBarTenant(navController) }
     ) { padding ->
         Box(
             modifier = Modifier
@@ -136,47 +137,7 @@ fun OrderDetails(
                 }
             }
 
-            // Fixed Bottom Buttons
-            Column(
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(horizontal = 32.dp, vertical = 8.dp)
-                    .background(MaterialTheme.colorScheme.background)
-            ) {
-//                Button(
-//                    onClick = {
-//                        // Acción para "Ver guía"
-//                    },
-//                    colors = ButtonDefaults.buttonColors(
-//                        containerColor = MaterialTheme.colorScheme.primary,
-//                        contentColor = Color.White
-//                    ),
-//                    shape = MaterialTheme.shapes.medium,
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .height(50.dp)
-//                ) {
-//                    Text("Ver guía", fontSize = 20.sp, fontWeight = FontWeight.SemiBold)
-//                }
 
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Button(
-                    onClick = {
-                        navController.navigate("orderDetail/${orderId}/qr")
-                    },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        contentColor = Color.White
-                    ),
-                    shape = MaterialTheme.shapes.medium,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(50.dp)
-                ) {
-                    Text("QR", fontSize = 20.sp, fontWeight = FontWeight.SemiBold)
-                }
-            }
         }
     }
 }

@@ -17,8 +17,9 @@ class LoginRepository {
 
             val docSnapshot = db.collection("users").document(user.uid).get().await()
             val role = docSnapshot.getString("role") ?: return null
+            val username = docSnapshot.getString("name") ?: return null
 
-            UserSession(user.uid, role)
+            UserSession(user.uid, role, username)
         } catch (e: Exception) {
             e.printStackTrace()
             null
@@ -32,6 +33,11 @@ class LoginRepository {
             remove("userId")
             apply()
         }
+    }
+
+    fun getUserName(context: Context): String? {
+        val sharedPref = context.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
+        return sharedPref.getString("userName", null)
     }
 
 }

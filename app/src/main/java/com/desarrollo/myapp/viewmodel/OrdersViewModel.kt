@@ -32,9 +32,9 @@ class OrdersViewModel : ViewModel() {
         }
     }
 
-    fun markOrderAsDelivered(orderRef: String, onComplete: (Boolean) -> Unit) {
+    fun markOrderAsDelivered(orderRef: String, deliverPerson: String, onComplete: (Boolean) -> Unit) {
         viewModelScope.launch {
-            val success = ordersRepository.markOrderAsDelivered(orderRef)
+            val success = ordersRepository.markOrderAsDelivered(orderRef, deliverPerson)
             onComplete(success)
         }
     }

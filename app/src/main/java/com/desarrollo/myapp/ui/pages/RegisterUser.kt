@@ -2,6 +2,7 @@ package com.desarrollo.myapp.ui.pages
 
 import RegisterRepository
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -95,6 +96,7 @@ fun RegisterUser(navController: NavController) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 8.dp)
+                        .background(MaterialTheme.colorScheme.background)
                 ) {
                     roles.forEach { rol ->
                         DropdownMenuItem(
