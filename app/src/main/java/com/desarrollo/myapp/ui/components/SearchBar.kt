@@ -20,20 +20,22 @@ import androidx.compose.ui.graphics.Color
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchBarInput() {
-    var query by remember { mutableStateOf("") }
-
+fun SearchBarInput(
+    query: String,
+    onSearchChanged: (String) -> Unit
+) {
     TextField(
         value = query,
-        onValueChange = { query = it },
+        onValueChange = onSearchChanged,
         modifier = Modifier.fillMaxWidth(),
-        placeholder = { Text("Buscar...") },
+        placeholder = { Text("Buscar por ID o nombre del local...") },
         leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null) },
         singleLine = true,
         colors = TextFieldDefaults.textFieldColors(
-            containerColor = Color.Transparent // Aquí quitas el fondo
+            containerColor = Color.Transparent
         )
     )
 }
+
 
 

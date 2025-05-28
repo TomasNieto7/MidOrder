@@ -120,7 +120,7 @@ fun MyLocalsTenant(navController: NavController) {
                 .padding(padding)
                 .padding(horizontal = 16.dp)
         ) {
-            SearchBarInput()
+//            SearchBarInput()
             Spacer(modifier = Modifier.height(16.dp))
             when (hasLocals) {
                 true -> {

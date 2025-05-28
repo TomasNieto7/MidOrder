@@ -92,7 +92,7 @@ fun LocationsSeller(
                 .padding(horizontal = 16.dp, vertical = 16.dp)
                 .fillMaxSize()
         ) {
-            SearchBarInput()
+//            SearchBarInput()
             if (savedLocals.isEmpty()) {
                 // Mensaje centrado si no hay locales guardados
                 Column(

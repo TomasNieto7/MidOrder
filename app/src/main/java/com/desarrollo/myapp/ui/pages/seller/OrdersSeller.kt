@@ -95,7 +95,7 @@ fun OrdersSeller(
                 .padding(horizontal = 16.dp, vertical = 16.dp)
                 .fillMaxSize()
         ) {
-            SearchBarInput()
+//            SearchBarInput()
             if (orders.isEmpty()) {
                 Column(
                     modifier = Modifier

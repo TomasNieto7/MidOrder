@@ -1,6 +1,7 @@
 package com.desarrollo.myapp.ui.pages.tenant
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -65,6 +66,11 @@ fun HomeTenant(navController: NavController) {
     val orders by viewModel.orders
     val loginRepository = LoginRepository()
 
+    val searchQuery by viewModel.searchQuery
+    val filteredOrders by viewModel.filteredOrders
+    Log.d("orders", "${hasLocals}")
+
+
     LaunchedEffect(userId) {
         userId?.let {
             viewModel.checkIfUserHasLocals(it)
@@ -104,14 +110,17 @@ fun HomeTenant(navController: NavController) {
                 .padding(padding)
                 .padding(horizontal = 16.dp)
         ) {
-            SearchBarInput()
+            SearchBarInput(
+                query = searchQuery,
+                onSearchChanged = viewModel::setSearchQuery
+            )
             Spacer(modifier = Modifier.height(16.dp))
             when (hasLocals) {
                 true -> {
                     when (hasOrders) {
                         true -> {
                             Column {
-                                orders.forEach { order ->
+                                filteredOrders.forEach { order ->
                                     OrderCard(order = order, onClick = {
                                     })
                                     Spacer(modifier = Modifier.height(8.dp))
